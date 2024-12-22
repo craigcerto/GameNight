@@ -227,6 +227,7 @@ ui <- page_navbar(
   # White - F4F4F9
   # Silver - 
   tags$head(
+    tags$link(rel = "icon", type = "image/png", href = "www/play.png"),
     HTML(
       '<link href="https://fonts.googleapis.com/css2?family=Anta" rel="stylesheet">'
     ),
@@ -250,7 +251,7 @@ ui <- page_navbar(
         justify-content: center;  
       }
       .t_span {
-        display:inline-flex;
+        display:flex;
         justify-content:center;
         gap:10px;
       }
@@ -506,7 +507,8 @@ ui <- page_navbar(
   ),
   nav_panel(
     value = "scoring_page",
-    title = "Scoring Page",
+    title = "Score",
+    icon = tags$img(src = "score.png", width = "20px"),
     cards$scoring_page,
     reactable.extras::reactable_extras_dependency(),
     tags$script(HTML('
@@ -1108,7 +1110,8 @@ server <- function(input, output) {
           </div>
         ')
       ) %>% 
-      select(game_id, game_dttm, game_type, rounds, winner, scoreboard)
+      select(game_id, game_dttm, game_type, rounds, winner, scoreboard) %>% 
+      arrange(desc(game_dttm))
     
     f
 
