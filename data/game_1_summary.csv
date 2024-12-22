@@ -1,0 +1,5 @@
+game_id, game_dttm, game_type, rounds, game_completion_type, game_end_dttm, player_name, player_score
+1, 2024-12-22T05:37:37Z, "Rummy", 12, "Score", 2024-12-22T05:37:37Z, "Craig", 400
+1, 2024-12-22T05:37:37Z, "Rummy", 12, "Score", 2024-12-22T05:37:37Z, "Lauren", 300
+1, 2024-12-22T05:37:37Z, "Rummy", 12, "Score", 2024-12-22T05:37:37Z, "Gloria", 200
+1, 2024-12-22T05:37:37Z, "Rummy", 12, "Score", 2024-12-22T05:37:37Z, "Paul", 100
