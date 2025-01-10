@@ -109,7 +109,7 @@ cards <- list(
       uiOutput("player_selection_ui")
     )
   ),
-    
+  
   choose_settings = card(
     border = FALSE,
     full_screen = FALSE,
@@ -178,6 +178,12 @@ cards <- list(
         )
       )
     )
+  ),
+  
+  scoring_page_empty = card(
+    class = "scoring_page",
+    div(h3("Please select all game settings & start game before switching to the scoreboard")),
+    actionButton("return_settings", "Return to Menu")
   ),
   
   # Have a table on the left hand side. The header of each column should be the user 
@@ -318,7 +324,6 @@ ui <- page_navbar(
         min-height:275px;
         max-height:275px;
         height:275px;
-        
         #div{
           gap:0px;
           margin:0px;
@@ -359,7 +364,7 @@ ui <- page_navbar(
         box-shadow: none;
       }
       .player_button {
-        width: 250px;
+        width: 150px;
         background-color:#F2E3BC;
         color: #F4F4F9;
         /*
@@ -370,7 +375,7 @@ ui <- page_navbar(
         */
       }
       .player_button_selected {
-        width: 250px;
+        width: 150px;
         background-color:#E9E9E9;
         color: #F4F4F9;
         /*border-color: #C6A15B;
@@ -509,7 +514,7 @@ ui <- page_navbar(
     value = "scoring_page",
     title = "Score",
     icon = tags$img(src = "score.png", width = "20px"),
-    cards$scoring_page,
+    uiOutput("scoring_page_ui"),
     reactable.extras::reactable_extras_dependency(),
     tags$script(HTML('
       document.addEventListener("keydown", function(e) {
@@ -613,6 +618,21 @@ select_game <- function(game_clicked, game_selected) {
 # Server
 server <- function(input, output) {
   
+  # If a game has started, show scoreboard page else..
+  output$scoring_page_ui <- renderUI({
+    
+    if (is.null(current_game_start())) {
+      
+      cards$scoring_page_empty
+      
+    } else {
+      
+      cards$scoring_page
+      
+    }
+    
+  })
+  
   output$round_indicator <- renderUI({
     
     x <- if (current_game_completion_type() == "Score") {
@@ -646,7 +666,7 @@ server <- function(input, output) {
   observeEvent(input$key_pressed, {
     
     if (input$key_pressed == "Enter") {
-    
+      
       # Get all of the values for this round
       for (p in current_game_players()) {
         
@@ -670,8 +690,15 @@ server <- function(input, output) {
       modalDialog(
         title = "Game Over",
         size = "m",
-        div(
-          "Winner!"
+        div(class = "game_over",
+            h3("Winner!", color = "#FFD700"),
+            HTML(winner_span()),
+            actionButton("back_to_menu", "Back to Menu"),
+            tags$style(HTML(".game_over {
+                text-align:center;
+                display: span;
+                
+              }"))
         )
       )
     )
@@ -703,19 +730,19 @@ server <- function(input, output) {
   
   # Enter the score into the game when user types it
   observe({
-
+    
     for (p in current_game_players()) {
-
+      
       r <- input[[glue("text_{p}")]]
-
+      
       round <- r[["row"]]
       last_input_round(round)
-
+      
     }
     
-
+    
   })
-
+  
   #paste0(id, ": ", string_list(input[[id]]))
   
   # Score table
@@ -801,7 +828,7 @@ server <- function(input, output) {
     
     cg <- current_game_scoreboard()
     
-     cg %>% 
+    cg %>% 
       reactable(
         bordered = TRUE,
         columns = list(
@@ -844,7 +871,7 @@ server <- function(input, output) {
           searchInputStyle = list(width = "100%")
         )
       )
-      
+    
     
   })
   
@@ -886,23 +913,23 @@ server <- function(input, output) {
     
     o <- if (rounds_score_switch) "Score" else "Rounds" 
     default <- if (o == "Rounds") 12 else 200
-  
-   list( 
-    span(o),
-    numericInput("score_round_num_input", label = NULL, value = default, width = "75px")
-   )
+    
+    list( 
+      span(o),
+      numericInput("score_round_num_input", label = NULL, value = default, width = "75px")
+    )
     
   })
   
   # Player data
   player_data <- reactive({
-  
+    
     data.frame(list(
-      player_name = c('Gloria', 'Paul', 'Lauren', 'Craig', 'Frank'),
-      nickname = c('Won Non', 'Pah-OOL', 'Gerald McBoingBoing', 'Ya Boii', 'Franconia Springfield'),
-      color = c('#321D71', '#8C1A10', '#48752C', '#2854C5', '#964B00'),
-      small_icon = c("gloria_small.png", "paul_small.png", "lauren_small.png", "craig_small.png", "frank_small.png"),
-      big_icon = c("gloria_medium.png", "paul_medium.png", "lauren_medium.png", "craig_medium.png", "frank_medium.png")
+      player_name = c('Gloria', 'Paul', 'Lauren', 'Craig', 'Frank', "Dave", "Amy", "Stacy", "Keith"),
+      nickname = c('Won Non', 'Pah-OOL', 'Gerald McBoingBoing', 'Ya Boii', 'Franconia Springfield', "Graham", "Amy", "Stacy", "Keith"),
+      color = c('#321D71', '#8C1A10', '#48752C', '#2854C5', '#964B00', '#000000', "#CEA8BC", "#7CA7D8", "#0E2787"),
+      small_icon = c("gloria_small.png", "paul_small.png", "lauren_small.png", "craig_small.png", "frank_small.png", "dave_small.png", "amy_small.png", "stacy_small.png", "keith_small.png"),
+      big_icon = c("gloria_medium.png", "paul_medium.png", "lauren_medium.png", "craig_medium.png", "frank_medium.png", "dave_small.png", "amy_small.png", "stacy_small.png", "keith_medium.png")
     ))
     
   })
@@ -921,13 +948,13 @@ server <- function(input, output) {
           </span>
         ')
       )
-  
+    
   })
   
   # Reactive table to track which players are selected for a game
   players_selected <- reactiveVal(data.frame(
-    player_name = c("Gloria", "Paul", "Lauren", "Craig", "Frank"),
-    selected = c(FALSE, FALSE, FALSE, FALSE, FALSE)
+    player_name = c("Gloria", "Paul", "Lauren", "Craig", "Frank", "Dave", "Amy", "Stacy", "Keith"),
+    selected = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
   ))
   
   game_selected <- reactiveVal()
@@ -943,9 +970,16 @@ server <- function(input, output) {
   observeEvent(input$Paul_select_button, select_player("Paul", players_selected))
   observeEvent(input$Gloria_select_button, select_player("Gloria", players_selected))
   
+  # Temporary 
+  # Dave, Amy, Keith, Stacy
+  observeEvent(input$Dave_select_button, select_player("Dave", players_selected))
+  observeEvent(input$Amy_select_button, select_player("Amy", players_selected))
+  observeEvent(input$Keith_select_button, select_player("Keith", players_selected))
+  observeEvent(input$Stacy_select_button, select_player("Stacy", players_selected))
+  
   # Triggered on hitting the play button 
   observeEvent(input$hit_play, {
-
+    
     game_type <- game_selected()
     
     completion_type <- if (input$rounds_score_switch) {"Score"} else {"Rounds"}
@@ -960,13 +994,14 @@ server <- function(input, output) {
       "navbar",
       selected = "scoring_page"
     )
-        
+    
   })
   
   # Build logic for selecting players for a game
   output$player_selection_ui <- renderUI({
     
     build_player_menu <- enhanced_player() %>% 
+      filter(!player_name %in% c('Lauren', 'Craig', "Frank")) %>% 
       left_join(players_selected(), by = join_by("player_name")) %>% 
       mutate(selected_tag = case_when(
         selected == TRUE ~ '_selected',
@@ -994,7 +1029,7 @@ server <- function(input, output) {
       max_height = "250px",
       HTML(menu)
     )
-
+    
   }) 
   
   # Load previous games from file system
@@ -1012,7 +1047,7 @@ server <- function(input, output) {
         }
       ) %>% 
       bind_rows()
-
+    
   })
   
   # Table containing previous games with the score sheet HTML as a column
@@ -1114,7 +1149,7 @@ server <- function(input, output) {
       arrange(desc(game_dttm))
     
     f
-
+    
   })
   
   # Game configurations
@@ -1128,6 +1163,8 @@ server <- function(input, output) {
   current_game_type <- reactiveVal(NULL)
   current_game_completion_type <- reactiveVal(NULL)
   
+  
+  
   # Initialize a game
   initialize_game <- function(game_type, completion_type, rounds, score_limit) {
     
@@ -1139,8 +1176,8 @@ server <- function(input, output) {
     )
     current_game_id(
       (previous_games_span_table() %>% 
-        arrange(game_id) %>% 
-        purrr::pluck("game_id", -1)) + 1
+         arrange(game_id) %>% 
+         purrr::pluck("game_id", -1)) + 1
     )
     print(current_game_id)
     current_game_type(game_type)
@@ -1156,18 +1193,26 @@ server <- function(input, output) {
           score_time = current_game_start()
         )
       ) %>% 
-      expandRows(rounds, drop = FALSE, count.is.col = FALSE) %>% 
-      group_by(player) %>% 
-      mutate(round = row_number()) %>% 
-      ungroup() %>% 
-      arrange(round)
+        expandRows(rounds, drop = FALSE, count.is.col = FALSE) %>% 
+        group_by(player) %>% 
+        mutate(round = row_number()) %>% 
+        ungroup() %>% 
+        arrange(round)
     )
   }
   
-  observeEvent(input$navbar, {
-    
-    
-    #intialize_game("Dominoes", "Score", 12, 200)
+  observeEvent(input$return_settings, {
+    nav_select(
+      "navbar",
+      selected = "choose_settings"
+    )
+  })
+  
+  observeEvent(input$back_to_menu, {
+    nav_select(
+      "navbar",
+      selected = "main_page"
+    )
   })
   
   # Calculate the current scoreboard with each player's display
@@ -1191,6 +1236,8 @@ server <- function(input, output) {
   })
   
   previous_games_trigger <- reactiveVal(1)
+  
+  
   
   # Log a game
   log_game <- function(game_id = current_game_id()) {
@@ -1245,8 +1292,16 @@ server <- function(input, output) {
     
     # Trigger reload of previous games data
     previous_games_trigger(previous_games_trigger() + 1)
-      
+    
   }
+  
+  winner_span <- reactive({
+    
+    t <- previous_games_span_table() %>% filter(game_id == current_game_id()) %>% purrr::pluck("winner", 1)
+    print(t)
+    print("span")
+    
+  })
   
   # Log a player's score
   log_score <- function(
@@ -1294,6 +1349,23 @@ server <- function(input, output) {
         print("Logging game")
         log_game(game_id)
         
+        showModal(
+          modalDialog(
+            title = "Game Over",
+            size = "m",
+            div(class = "game_over",
+                h3("Winner!", color = "#FFD700"),
+                HTML(winner_span()),
+                actionButton("back_to_menu", "Back to Menu"),
+                tags$style(HTML(".game_over {
+                text-align:center;
+                display: span;
+                
+              }"))
+            )
+          )
+        )
+        
       } else {
         
         print("Increasing round number")
@@ -1319,6 +1391,23 @@ server <- function(input, output) {
         
         print("Logging game")
         log_game(game_id)
+        
+        showModal(
+          modalDialog(
+            title = "Game Over",
+            size = "m",
+            div(class = "game_over",
+                h3("Winner!", color = "#FFD700"),
+                HTML(winner_span()),
+                actionButton("back_to_menu", "Back to Menu"),
+                tags$style(HTML(".game_over {
+                  text-align:center;
+                  display: span;
+                
+              }"))
+            )
+          )
+        )
         
       }
     }
