@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 15% 13%;
+    --foreground: 240 10% 97%;
+
+    --card: 220 15% 18%;
+    --card-foreground: 240 10% 97%;
+
+    --popover: 220 15% 15%;
+    --popover-foreground: 240 10% 97%;
+
+    --primary: 40 45% 55%;
+    --primary-foreground: 220 15% 13%;
+
+    --secondary: 200 20% 42%;
+    --secondary-foreground: 240 10% 97%;
+
+    --muted: 220 15% 25%;
+    --muted-foreground: 240 10% 65%;
+
+    --accent: 40 45% 55%;
+    --accent-foreground: 220 15% 13%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 240 10% 97%;
+
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 40 45% 55%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom neon glow effects */
+.neon-text {
+  text-shadow:
+    0 0 5px #C6A15B,
+    0 0 10px #C6A15B,
+    0 0 20px #C6A15B,
+    0 0 40px #C6A15B;
+}
+
+.neon-border {
+  box-shadow:
+    0 0 5px #C6A15B,
+    0 0 10px #C6A15B,
+    inset 0 0 5px rgba(198, 161, 91, 0.3);
+}
+
+.neon-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px #C6A15B, 0 0 10px #C6A15B, 0 0 15px #C6A15B;
+  }
+  50% {
+    box-shadow: 0 0 10px #C6A15B, 0 0 20px #C6A15B, 0 0 30px #C6A15B;
+  }
+}
+
+/* Game card hover effects */
+.game-card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.game-card:hover {
+  @apply transform scale-105;
+  box-shadow: 0 0 20px rgba(198, 161, 91, 0.5);
+}
+
+/* Player card styles */
+.player-card {
+  @apply transition-all duration-200;
+}
+
+.player-card.selected {
+  @apply ring-2 ring-gn-gold;
+  box-shadow: 0 0 15px rgba(198, 161, 91, 0.4);
+}
+
+/* Score input animation */
+.score-input:focus {
+  @apply ring-2 ring-gn-gold outline-none;
+  box-shadow: 0 0 10px rgba(198, 161, 91, 0.3);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gn-licorice;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gn-darkblue rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gn-gold;
+}
