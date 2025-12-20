@@ -12,9 +12,9 @@ interface GameTypeSelectorProps {
 }
 
 const gameTypes: { type: GameType; icon: string; color: string }[] = [
-  { type: 'dominoes', icon: '/images/dominoes.png', color: '#586F7C' },
-  { type: 'rummy', icon: '/images/rummy.png', color: '#8B4513' },
-  { type: 'mahjong', icon: '/images/mahjong.png', color: '#228B22' },
+  { type: 'dominoes', icon: '/images/games/dominoes.png', color: '#586F7C' },
+  { type: 'rummy', icon: '/images/games/rummy.png', color: '#8B4513' },
+  { type: 'mahjong', icon: '/images/games/mahjong.png', color: '#228B22' },
 ]
 
 export function GameTypeSelector({

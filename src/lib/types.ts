@@ -85,7 +85,7 @@ export const GAME_TYPE_LABELS: Record<GameType, string> = {
 }
 
 export const GAME_TYPE_ICONS: Record<GameType, string> = {
-  dominoes: '/images/dominoes.png',
-  rummy: '/images/rummy.png',
-  mahjong: '/images/mahjong.png',
+  dominoes: '/images/games/dominoes.png',
+  rummy: '/images/games/rummy.png',
+  mahjong: '/images/games/mahjong.png',
 }
