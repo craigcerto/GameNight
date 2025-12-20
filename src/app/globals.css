@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    /* Professional Arcade Color Scheme */
-    --background: 240 20% 3%;
+    /* Vibrant Neon Casino Theme - Lighter & Brighter */
+    --background: 250 30% 12%;
     --foreground: 0 0% 98%;
 
-    --card: 240 20% 6%;
+    --card: 250 25% 16%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 20% 5%;
+    --popover: 250 25% 14%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 340 100% 59%;
+    --primary: 340 100% 60%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 186 100% 50%;
-    --secondary-foreground: 240 20% 4%;
+    --secondary-foreground: 250 30% 12%;
 
-    --muted: 240 15% 12%;
-    --muted-foreground: 240 5% 55%;
+    --muted: 250 20% 22%;
+    --muted-foreground: 250 10% 65%;
 
     --accent: 280 100% 65%;
     --accent-foreground: 0 0% 100%;
@@ -29,23 +29,18 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 15% 15%;
-    --input: 240 15% 10%;
-    --ring: 340 100% 59%;
+    --border: 250 20% 25%;
+    --input: 250 20% 20%;
+    --ring: 340 100% 60%;
 
     --radius: 1rem;
 
-    /* Neon colors */
-    --neon-pink: #ff2d75;
-    --neon-cyan: #00f0ff;
-    --neon-purple: #b14eff;
-    --neon-yellow: #ffe135;
+    /* Neon colors - brighter */
+    --neon-pink: #ff3a7f;
+    --neon-cyan: #00e5ff;
+    --neon-purple: #c86bfa;
+    --neon-yellow: #ffea00;
     --neon-green: #39ff14;
-
-    /* Gradients */
-    --gradient-pink-purple: linear-gradient(135deg, #ff2d75 0%, #b14eff 100%);
-    --gradient-cyan-pink: linear-gradient(135deg, #00f0ff 0%, #ff2d75 100%);
-    --gradient-dark: linear-gradient(180deg, rgba(10,10,20,1) 0%, rgba(5,5,15,1) 100%);
   }
 }
 
@@ -61,237 +56,140 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255, 45, 117, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 100% 100%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
-      radial-gradient(ellipse at 0% 100%, rgba(177, 78, 255, 0.05) 0%, transparent 40%),
-      linear-gradient(180deg, #06060f 0%, #0a0a18 50%, #050510 100%);
-    background-attachment: fixed;
+    /* Lighter gradient background - no blur, just gradients */
+    background: linear-gradient(135deg,
+      hsl(250, 30%, 12%) 0%,
+      hsl(260, 35%, 15%) 50%,
+      hsl(250, 30%, 12%) 100%
+    );
     min-height: 100vh;
   }
 }
 
 /* ============================================
-   TYPOGRAPHY
+   TYPOGRAPHY - Simple text glows
    ============================================ */
 
 .text-glow-pink {
-  text-shadow:
-    0 0 10px rgba(255, 45, 117, 0.8),
-    0 0 20px rgba(255, 45, 117, 0.6),
-    0 0 30px rgba(255, 45, 117, 0.4),
-    0 0 40px rgba(255, 45, 117, 0.2);
+  text-shadow: 0 0 20px rgba(255, 58, 127, 0.7);
 }
 
 .text-glow-cyan {
-  text-shadow:
-    0 0 10px rgba(0, 240, 255, 0.8),
-    0 0 20px rgba(0, 240, 255, 0.6),
-    0 0 30px rgba(0, 240, 255, 0.4);
-}
-
-.text-glow-white {
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.5),
-    0 0 20px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #ff2d75 0%, #00f0ff 50%, #b14eff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-pink {
-  background: linear-gradient(135deg, #ff2d75 0%, #ff6b9d 100%);
+  background: linear-gradient(135deg, #ff3a7f 0%, #00e5ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* ============================================
-   CARD STYLES - Professional Glass Morphism
+   CARD STYLES - Simple, fast, no backdrop-filter
    ============================================ */
 
 .card-arcade {
-  background: linear-gradient(
-    145deg,
-    rgba(20, 20, 35, 0.9) 0%,
-    rgba(15, 15, 28, 0.95) 100%
+  background: linear-gradient(145deg,
+    hsl(250, 25%, 18%) 0%,
+    hsl(250, 25%, 15%) 100%
   );
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .card-arcade:hover {
-  border-color: rgba(255, 45, 117, 0.3);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 45, 117, 0.1),
-    0 0 40px rgba(255, 45, 117, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 58, 127, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 58, 127, 0.15);
   transform: translateY(-2px);
 }
 
 .card-highlight {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 45, 117, 0.12) 0%,
-    rgba(20, 20, 35, 0.95) 100%
+  background: linear-gradient(145deg,
+    hsl(340, 50%, 20%) 0%,
+    hsl(250, 25%, 15%) 100%
   );
-  border: 1px solid rgba(255, 45, 117, 0.25);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(255, 45, 117, 0.15),
-    inset 0 1px 0 rgba(255, 45, 117, 0.1);
+  border: 1px solid rgba(255, 58, 127, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 58, 127, 0.2);
 }
 
 .card-cyan {
-  background: linear-gradient(
-    145deg,
-    rgba(0, 240, 255, 0.08) 0%,
-    rgba(15, 15, 28, 0.95) 100%
+  background: linear-gradient(145deg,
+    hsl(186, 40%, 18%) 0%,
+    hsl(250, 25%, 15%) 100%
   );
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(0, 240, 255, 0.1),
-    inset 0 1px 0 rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 25px rgba(0, 229, 255, 0.15);
 }
 
 /* ============================================
-   BUTTON STYLES
+   BUTTON STYLES - Simple gradients
    ============================================ */
 
 .btn-arcade-primary {
-  background: linear-gradient(135deg, #ff2d75 0%, #ff4d8d 100%);
+  background: linear-gradient(135deg, #ff3a7f 0%, #ff5c94 100%);
   color: white;
   font-weight: 600;
   border: none;
-  box-shadow:
-    0 4px 15px rgba(255, 45, 117, 0.4),
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 58, 127, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-arcade-primary:hover {
-  background: linear-gradient(135deg, #ff4d8d 0%, #ff6ba3 100%);
-  box-shadow:
-    0 6px 25px rgba(255, 45, 117, 0.5),
-    0 0 40px rgba(255, 45, 117, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 25px rgba(255, 58, 127, 0.5);
   transform: translateY(-2px);
 }
 
 .btn-arcade-primary:active {
   transform: translateY(0);
-  box-shadow:
-    0 2px 10px rgba(255, 45, 117, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-arcade-secondary {
   background: transparent;
-  color: #00f0ff;
+  color: #00e5ff;
   font-weight: 600;
-  border: 2px solid rgba(0, 240, 255, 0.5);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+  transition: all 0.15s ease;
 }
 
 .btn-arcade-secondary:hover {
-  background: rgba(0, 240, 255, 0.1);
-  border-color: #00f0ff;
-  box-shadow:
-    0 0 25px rgba(0, 240, 255, 0.3),
-    inset 0 0 15px rgba(0, 240, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.btn-arcade-outline {
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.3s ease;
-}
-
-.btn-arcade-outline:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background: rgba(0, 229, 255, 0.15);
+  border-color: #00e5ff;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
 }
 
 /* ============================================
-   GLOW EFFECTS
+   SIMPLE GLOW EFFECTS
    ============================================ */
 
 .glow-pink {
-  box-shadow:
-    0 0 20px rgba(255, 45, 117, 0.4),
-    0 0 40px rgba(255, 45, 117, 0.2),
-    0 0 60px rgba(255, 45, 117, 0.1);
+  box-shadow: 0 0 25px rgba(255, 58, 127, 0.5);
 }
 
 .glow-cyan {
-  box-shadow:
-    0 0 20px rgba(0, 240, 255, 0.4),
-    0 0 40px rgba(0, 240, 255, 0.2),
-    0 0 60px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
 }
 
-.glow-purple {
-  box-shadow:
-    0 0 20px rgba(177, 78, 255, 0.4),
-    0 0 40px rgba(177, 78, 255, 0.2);
-}
-
-/* Animated glow pulse */
+/* Simple pulse animation - no complex shadows */
 .glow-pulse {
-  animation: glowPulse 2s ease-in-out infinite;
+  animation: simplePulse 2s ease-in-out infinite;
 }
 
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow:
-      0 0 20px rgba(255, 45, 117, 0.4),
-      0 0 40px rgba(255, 45, 117, 0.2);
-  }
-  50% {
-    box-shadow:
-      0 0 30px rgba(255, 45, 117, 0.6),
-      0 0 60px rgba(255, 45, 117, 0.4),
-      0 0 80px rgba(255, 45, 117, 0.2);
-  }
+@keyframes simplePulse {
+  0%, 100% { box-shadow: 0 4px 15px rgba(255, 58, 127, 0.4); }
+  50% { box-shadow: 0 4px 25px rgba(255, 58, 127, 0.6); }
 }
 
-/* Animated border glow */
-.border-glow {
-  position: relative;
-}
+/* ============================================
+   NAVIGATION
+   ============================================ */
 
-.border-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, #ff2d75, #00f0ff, #b14eff, #ff2d75);
-  background-size: 400% 400%;
-  animation: borderGlow 8s ease infinite;
-  z-index: -1;
-  opacity: 0.7;
-  filter: blur(8px);
-}
-
-@keyframes borderGlow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.nav-arcade {
+  background: hsl(250, 28%, 14%);
+  border-bottom: 1px solid rgba(255, 58, 127, 0.2);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================
@@ -299,204 +197,36 @@
    ============================================ */
 
 .input-arcade {
-  background: rgba(10, 10, 20, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: hsl(250, 25%, 14%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
-  transition: all 0.3s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .input-arcade:focus {
   outline: none;
-  border-color: rgba(0, 240, 255, 0.6);
-  box-shadow:
-    0 0 0 3px rgba(0, 240, 255, 0.1),
-    0 0 20px rgba(0, 240, 255, 0.2);
-}
-
-.input-arcade::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 229, 255, 0.7);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
 }
 
 /* ============================================
-   SPECIAL EFFECTS
+   RANK BADGES
    ============================================ */
 
-/* Scanline overlay effect */
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.1) 0px,
-    rgba(0, 0, 0, 0.1) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  pointer-events: none;
-  opacity: 0.3;
-}
-
-/* Subtle grid background */
-.bg-grid-subtle {
-  background-image:
-    linear-gradient(rgba(255, 45, 117, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 45, 117, 0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* Animated gradient background */
-.bg-gradient-animated {
-  background: linear-gradient(-45deg,
-    rgba(255, 45, 117, 0.1),
-    rgba(0, 240, 255, 0.1),
-    rgba(177, 78, 255, 0.1),
-    rgba(255, 45, 117, 0.1)
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* Shine effect */
-.shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.shine::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 40%,
-    rgba(255, 255, 255, 0.05) 50%,
-    transparent 60%
-  );
-  animation: shine 4s ease-in-out infinite;
-}
-
-@keyframes shine {
-  0% { transform: translateX(-100%) rotate(45deg); }
-  100% { transform: translateX(100%) rotate(45deg); }
-}
-
-/* ============================================
-   NAVIGATION STYLES
-   ============================================ */
-
-.nav-arcade {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 20, 0.95) 0%,
-    rgba(10, 10, 20, 0.85) 100%
-  );
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 45, 117, 0.15);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-}
-
-.nav-link {
-  position: relative;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #ff2d75, #00f0ff);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 80%;
-}
-
-.nav-link.active {
-  background: rgba(255, 45, 117, 0.1);
-  color: #ff2d75;
-}
-
-/* ============================================
-   PLAYER & GAME ELEMENTS
-   ============================================ */
-
-.player-avatar {
-  position: relative;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.player-avatar::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--player-color, #ff2d75), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.player-avatar:hover::before,
-.player-avatar.selected::before {
-  opacity: 1;
-}
-
-.rank-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 0.875rem;
-}
-
-.rank-badge-1 {
+.rank-gold {
   background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
   color: #1a1a2e;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
-.rank-badge-2 {
-  background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+.rank-silver {
+  background: linear-gradient(135deg, #e0e0e0 0%, #a8a8a8 100%);
   color: #1a1a2e;
 }
 
-.rank-badge-3 {
+.rank-bronze {
   background: linear-gradient(135deg, #cd7f32 0%, #b8722d 100%);
   color: #1a1a2e;
-}
-
-/* ============================================
-   SCORE DISPLAY
-   ============================================ */
-
-.score-display {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-
-.score-leader {
-  color: #ff2d75;
-  text-shadow: 0 0 20px rgba(255, 45, 117, 0.6);
 }
 
 /* ============================================
@@ -509,39 +239,32 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(10, 10, 20, 0.8);
-  border-radius: 4px;
+  background: hsl(250, 25%, 12%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ff2d75 0%, #b14eff 100%);
+  background: linear-gradient(180deg, #ff3a7f 0%, #c86bfa 100%);
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ff4d8d 0%, #c46eff 100%);
-}
-
 /* ============================================
-   UTILITY CLASSES
+   UTILITIES
    ============================================ */
 
-.text-balance {
-  text-wrap: balance;
-}
-
-.transition-smooth {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Selection styling */
 ::selection {
-  background: rgba(255, 45, 117, 0.3);
+  background: rgba(255, 58, 127, 0.4);
   color: white;
 }
 
-/* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid rgba(0, 240, 255, 0.6);
+  outline: 2px solid rgba(0, 229, 255, 0.7);
   outline-offset: 2px;
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

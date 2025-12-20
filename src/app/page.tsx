@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Play, Trophy, TrendingUp, Clock, Sparkles, ChevronRight } from 'lucide-react'
+import { Play, Trophy, TrendingUp, Clock, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { GameHistory } from '@/components/GameHistory'
@@ -134,85 +134,66 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-10">
-      {/* Hero section */}
-      <section className="relative py-16 text-center">
-        {/* Background glow effect */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#ff2d75]/20 rounded-full blur-[120px]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-[#00f0ff]/10 rounded-full blur-[100px]" />
+    <div className="space-y-8">
+      {/* Hero section - no blur effects for performance */}
+      <section className="py-12 text-center">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/neon.png"
+            alt="GameNight"
+            width={340}
+            height={170}
+            className="max-w-full h-auto"
+            priority
+          />
         </div>
 
-        <div className="relative z-10">
-          {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <div className="relative">
-              <Image
-                src="/images/neon.png"
-                alt="GameNight"
-                width={380}
-                height={190}
-                className="max-w-full h-auto"
-                style={{
-                  filter: 'drop-shadow(0 0 40px rgba(255, 45, 117, 0.5)) drop-shadow(0 0 80px rgba(255, 45, 117, 0.3))'
-                }}
-                priority
-              />
-            </div>
-          </div>
+        {/* Tagline */}
+        <p className="text-lg text-white/60 mb-8 max-w-md mx-auto">
+          Track scores for Dominoes, Rummy, Mahjong and more
+        </p>
 
-          {/* Tagline */}
-          <p className="text-xl text-white/50 mb-10 max-w-lg mx-auto font-light tracking-wide">
-            Track scores for Dominoes, Rummy, Mahjong and more
-          </p>
-
-          {/* CTA Button */}
-          <Link href="/play">
-            <Button variant="gold" size="xl" className="glow-pulse group">
-              <Play className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
-              Start New Game
-              <Sparkles className="h-4 w-4 ml-2 opacity-70" />
-            </Button>
-          </Link>
-        </div>
+        {/* CTA Button */}
+        <Link href="/play">
+          <Button variant="gold" size="xl">
+            <Play className="h-5 w-5 mr-2" />
+            Start New Game
+          </Button>
+        </Link>
       </section>
 
       {/* Active Games Section */}
       {activeGames.length > 0 && (
         <section>
-          <Card className="card-cyan overflow-hidden">
-            <CardHeader className="border-b border-[#00f0ff]/20">
+          <Card className="card-cyan">
+            <CardHeader className="border-b border-[#00e5ff]/20">
               <CardTitle className="flex items-center gap-3">
-                <div className="relative">
-                  <Clock className="h-5 w-5 text-[#00f0ff]" />
-                  <div className="absolute inset-0 animate-ping">
-                    <Clock className="h-5 w-5 text-[#00f0ff] opacity-40" />
-                  </div>
-                </div>
-                <span className="text-[#00f0ff] font-semibold">Game In Progress</span>
+                <Clock className="h-5 w-5 text-[#00e5ff]" />
+                <span className="text-[#00e5ff] font-semibold">Game In Progress</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
               <div className="space-y-3">
                 {activeGames.map((game) => (
                   <Link key={game.id} href={`/game/${game.id}`}>
-                    <div className="group flex items-center justify-between p-4 rounded-xl bg-black/30 border border-white/5 hover:border-[#00f0ff]/40 hover:bg-[#00f0ff]/5 transition-all duration-300 cursor-pointer">
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#00e5ff]/40 hover:bg-[#00e5ff]/10 transition-colors cursor-pointer">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl">
+                        <div className="w-11 h-11 rounded-lg bg-white/10 flex items-center justify-center text-2xl">
                           {game.game_type === 'dominoes' && '🁣'}
                           {game.game_type === 'rummy' && '🃏'}
                           {game.game_type === 'mahjong' && '🀄'}
                         </div>
                         <div>
                           <p className="font-semibold text-white capitalize">{game.game_type}</p>
-                          <p className="text-sm text-white/40">
+                          <p className="text-sm text-white/50">
                             {game.game_players.length} players
                           </p>
                         </div>
                       </div>
-                      <Button variant="neon-cyan" size="sm" className="group-hover:glow-cyan">
+                      <Button variant="neon-cyan" size="sm">
                         Resume
-                        <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
+                        <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
                     </div>
                   </Link>
@@ -227,38 +208,31 @@ export default function HomePage() {
       <section className="grid md:grid-cols-3 gap-6">
         {/* Top Players */}
         <Card>
-          <CardHeader className="border-b border-white/5">
+          <CardHeader className="border-b border-white/10">
             <CardTitle className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#ff2d75]/20 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-[#ff2d75]" />
-              </div>
-              <span className="gradient-text font-semibold">Top Players</span>
+              <TrendingUp className="h-5 w-5 text-[#ff3a7f]" />
+              <span className="text-[#ff3a7f] font-semibold">Top Players</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="w-6 h-6 border-2 border-[#ff2d75] border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-[#ff3a7f] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : topPlayers.length > 0 ? (
               <div className="space-y-2">
                 {topPlayers.map((entry, index) => (
                   <div
                     key={entry.player.id}
-                    className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
-                      index === 0
-                        ? 'bg-gradient-to-r from-[#ff2d75]/20 to-transparent border border-[#ff2d75]/20'
-                        : 'hover:bg-white/5'
+                    className={`flex items-center gap-3 p-3 rounded-xl ${
+                      index === 0 ? 'bg-[#ff3a7f]/15 border border-[#ff3a7f]/25' : ''
                     }`}
                   >
                     {/* Rank Badge */}
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                      index === 0
-                        ? 'bg-gradient-to-br from-[#ffd700] to-[#ff8c00] text-black shadow-[0_0_15px_rgba(255,215,0,0.5)]'
-                        : index === 1
-                        ? 'bg-gradient-to-br from-[#c0c0c0] to-[#808080] text-black'
-                        : index === 2
-                        ? 'bg-gradient-to-br from-[#cd7f32] to-[#8b4513] text-black'
+                      index === 0 ? 'rank-gold'
+                        : index === 1 ? 'rank-silver'
+                        : index === 2 ? 'rank-bronze'
                         : 'bg-white/10 text-white/60'
                     }`}>
                       {index + 1}
@@ -266,11 +240,8 @@ export default function HomePage() {
 
                     {/* Player Avatar */}
                     <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold transition-all duration-300"
-                      style={{
-                        backgroundColor: entry.player.color,
-                        boxShadow: index === 0 ? `0 0 20px ${entry.player.color}80` : undefined,
-                      }}
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                      style={{ backgroundColor: entry.player.color }}
                     >
                       {entry.player.name.charAt(0)}
                     </div>
@@ -281,10 +252,8 @@ export default function HomePage() {
                     </span>
 
                     {/* Wins */}
-                    <span className={`font-bold text-sm px-2 py-1 rounded-lg ${
-                      index === 0
-                        ? 'bg-[#ff2d75]/20 text-[#ff2d75]'
-                        : 'text-white/50'
+                    <span className={`font-bold text-sm ${
+                      index === 0 ? 'text-[#ff3a7f]' : 'text-white/50'
                     }`}>
                       {entry.wins} {entry.wins === 1 ? 'win' : 'wins'}
                     </span>
@@ -294,9 +263,7 @@ export default function HomePage() {
             ) : (
               <div className="text-center py-8">
                 <Trophy className="h-10 w-10 mx-auto text-white/20 mb-3" />
-                <p className="text-white/40 text-sm">
-                  No games played yet
-                </p>
+                <p className="text-white/50 text-sm">No games played yet</p>
               </div>
             )}
           </CardContent>
@@ -304,31 +271,25 @@ export default function HomePage() {
 
         {/* Recent Games */}
         <Card className="md:col-span-2">
-          <CardHeader className="border-b border-white/5">
+          <CardHeader className="border-b border-white/10">
             <CardTitle className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#ffe135]/20 flex items-center justify-center">
-                <Trophy className="h-4 w-4 text-[#ffe135]" />
-              </div>
+              <Trophy className="h-5 w-5 text-[#ffea00]" />
               <span className="text-white font-semibold">Recent Games</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
             {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="w-6 h-6 border-2 border-[#ff2d75] border-t-transparent rounded-full animate-spin" />
+              <div className="flex items-center justify-center py-10">
+                <div className="w-5 h-5 border-2 border-[#ff3a7f] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : games.length > 0 ? (
               <GameHistory games={games} />
             ) : (
-              <div className="text-center py-12">
+              <div className="text-center py-10">
                 <Play className="h-10 w-10 mx-auto text-white/20 mb-3" />
-                <p className="text-white/40 text-sm mb-4">
-                  No games completed yet
-                </p>
+                <p className="text-white/50 text-sm mb-4">No games completed yet</p>
                 <Link href="/play">
-                  <Button variant="outline" size="sm">
-                    Start your first game
-                  </Button>
+                  <Button variant="outline" size="sm">Start your first game</Button>
                 </Link>
               </div>
             )}
