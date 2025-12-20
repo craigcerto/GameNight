@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Trophy, Home, RotateCcw } from 'lucide-react'
+import { Trophy, Home, RotateCcw, StopCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -36,6 +36,7 @@ export default function GamePage() {
   const [currentRound, setCurrentRound] = useState(1)
   const [loading, setLoading] = useState(true)
   const [showWinnerModal, setShowWinnerModal] = useState(false)
+  const [showEndGameModal, setShowEndGameModal] = useState(false)
   const [winner, setWinner] = useState<Player | null>(null)
 
   const players = game?.game_players.map((gp) => gp.player) || []
@@ -111,6 +112,62 @@ export default function GamePage() {
       supabase.removeChannel(channel)
     }
   }, [gameId, loadGame])
+
+  // End game early function
+  const handleEndGameEarly = async () => {
+    if (!game) return
+
+    try {
+      // Calculate current totals
+      const playerTotals = players.map((player) => {
+        const total = scores
+          .filter((s) => s.player_id === player.id)
+          .reduce((sum, s) => sum + s.score, 0)
+        return { player, total }
+      })
+
+      // Find winner (highest score)
+      const sorted = [...playerTotals].sort((a, b) => b.total - a.total)
+      const gameWinner = sorted[0]?.player || null
+
+      // Update game as completed
+      await supabase
+        .from('games')
+        .update({
+          status: 'completed',
+          winner_id: gameWinner?.id || null,
+          ended_at: new Date().toISOString(),
+        })
+        .eq('id', gameId)
+
+      // Update final scores for all players
+      for (const pt of playerTotals) {
+        await supabase
+          .from('game_players')
+          .update({ final_score: pt.total })
+          .eq('game_id', gameId)
+          .eq('player_id', pt.player.id)
+      }
+
+      setShowEndGameModal(false)
+
+      if (gameWinner) {
+        setWinner(gameWinner)
+        setShowWinnerModal(true)
+      } else {
+        router.push('/')
+      }
+
+      loadGame()
+    } catch (error) {
+      console.error('Error ending game:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to end game',
+        variant: 'destructive',
+      })
+    }
+  }
 
   const handleSubmitScores = async (
     roundScores: { playerId: string; score: number }[]
@@ -250,12 +307,25 @@ export default function GamePage() {
           </p>
         </div>
 
-        <Link href="/">
-          <Button variant="outline" size="sm">
-            <Home className="h-4 w-4 mr-2" />
-            Home
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          {!isCompleted && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowEndGameModal(true)}
+              className="text-red-400 border-red-400/50 hover:bg-red-400/10"
+            >
+              <StopCircle className="h-4 w-4 mr-2" />
+              End Game
+            </Button>
+          )}
+          <Link href="/">
+            <Button variant="outline" size="sm">
+              <Home className="h-4 w-4 mr-2" />
+              Home
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -375,6 +445,34 @@ export default function GamePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* End Game Confirmation Modal */}
+      <Dialog open={showEndGameModal} onOpenChange={setShowEndGameModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>End Game Early?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to end this game? The player with the highest
+              score will be declared the winner.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-3 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setShowEndGameModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleEndGameEarly}
+            >
+              <StopCircle className="h-4 w-4 mr-2" />
+              End Game
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Winner modal */}
       <Dialog open={showWinnerModal} onOpenChange={setShowWinnerModal}>

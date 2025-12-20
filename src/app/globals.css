@@ -4,33 +4,40 @@
 
 @layer base {
   :root {
-    --background: 220 15% 13%;
+    /* Original GameNight colors:
+       Dark Blue: #586F7C
+       Gold: #C6A15B
+       Licorice: #231B1B
+       White: #F4F4F9
+       Cream: #F2E3BC
+    */
+    --background: 200 16% 30%;
     --foreground: 240 10% 97%;
 
-    --card: 220 15% 18%;
-    --card-foreground: 240 10% 97%;
+    --card: 40 38% 56%;
+    --card-foreground: 20 14% 12%;
 
-    --popover: 220 15% 15%;
+    --popover: 200 16% 25%;
     --popover-foreground: 240 10% 97%;
 
-    --primary: 40 45% 55%;
-    --primary-foreground: 220 15% 13%;
+    --primary: 40 38% 56%;
+    --primary-foreground: 20 14% 12%;
 
-    --secondary: 200 20% 42%;
+    --secondary: 200 16% 42%;
     --secondary-foreground: 240 10% 97%;
 
-    --muted: 220 15% 25%;
-    --muted-foreground: 240 10% 65%;
+    --muted: 200 16% 35%;
+    --muted-foreground: 240 10% 75%;
 
-    --accent: 40 45% 55%;
-    --accent-foreground: 220 15% 13%;
+    --accent: 40 38% 56%;
+    --accent-foreground: 20 14% 12%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 240 10% 97%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 40 45% 55%;
+    --border: 200 16% 40%;
+    --input: 42 40% 85%;
+    --ring: 40 38% 56%;
 
     --radius: 0.75rem;
   }

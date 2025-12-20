@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Play, Trophy, TrendingUp } from 'lucide-react'
+import { Play, Trophy, TrendingUp, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { GameHistory } from '@/components/GameHistory'
@@ -12,6 +12,7 @@ import type { GameWithPlayers, Player } from '@/lib/types'
 
 export default function HomePage() {
   const [games, setGames] = useState<GameWithPlayers[]>([])
+  const [activeGames, setActiveGames] = useState<GameWithPlayers[]>([])
   const [topPlayers, setTopPlayers] = useState<{ player: Player; wins: number }[]>([])
   const [loading, setLoading] = useState(true)
   const [configured, setConfigured] = useState(true)
@@ -42,6 +43,23 @@ export default function HomePage() {
 
         if (gamesError) throw gamesError
         setGames(gamesData as unknown as GameWithPlayers[])
+
+        // Load active games
+        const { data: activeGamesData, error: activeError } = await supabase
+          .from('games')
+          .select(`
+            *,
+            game_players (
+              *,
+              player:players (*)
+            )
+          `)
+          .eq('status', 'active')
+          .order('started_at', { ascending: false })
+
+        if (!activeError && activeGamesData) {
+          setActiveGames(activeGamesData as unknown as GameWithPlayers[])
+        }
 
         // Calculate top players by wins
         const { data: playersData } = await supabase
@@ -117,11 +135,18 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8">
-      {/* Hero section */}
+      {/* Hero section with neon logo */}
       <div className="text-center py-8">
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-gn-gold neon-text mb-4">
-          GameNight
-        </h1>
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/neon.png"
+            alt="GameNight"
+            width={300}
+            height={150}
+            className="max-w-full h-auto"
+            priority
+          />
+        </div>
         <p className="text-xl text-muted-foreground mb-8">
           Track scores for Dominoes, Rummy, Mahjong and more!
         </p>
@@ -132,6 +157,44 @@ export default function HomePage() {
           </Button>
         </Link>
       </div>
+
+      {/* Active Games Section */}
+      {activeGames.length > 0 && (
+        <Card className="border-gn-gold/50 bg-gn-gold/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-gn-gold">
+              <Clock className="h-5 w-5" />
+              Game In Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {activeGames.map((game) => (
+                <Link key={game.id} href={`/game/${game.id}`}>
+                  <div className="flex items-center justify-between p-4 rounded-lg bg-card hover:bg-accent transition-colors cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">
+                        {game.game_type === 'dominoes' && '🁣'}
+                        {game.game_type === 'rummy' && '🃏'}
+                        {game.game_type === 'mahjong' && '🀄'}
+                      </span>
+                      <div>
+                        <p className="font-semibold capitalize">{game.game_type}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {game.game_players.length} players
+                        </p>
+                      </div>
+                    </div>
+                    <Button variant="gold" size="sm">
+                      Resume
+                    </Button>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid md:grid-cols-3 gap-6">
         {/* Top Players */}
