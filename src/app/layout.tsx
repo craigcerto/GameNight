@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Anta } from 'next/font/google'
+import { Inter, Orbitron } from 'next/font/google'
 import './globals.css'
 import { Navigation } from '@/components/Navigation'
 import { Toaster } from '@/components/ui/toaster'
@@ -9,10 +9,9 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-const anta = Anta({
-  weight: '400',
+const orbitron = Orbitron({
   subsets: ['latin'],
-  variable: '--font-anta',
+  variable: '--font-display',
 })
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${anta.variable} font-sans min-h-screen bg-background`}>
+      <body className={`${inter.variable} ${orbitron.variable} font-sans min-h-screen bg-background`}>
         <Navigation />
         <main className="container mx-auto px-4 py-6">
           {children}

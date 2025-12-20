@@ -59,7 +59,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-inter)'],
-        display: ['var(--font-anta)'],
+        display: ['var(--font-display)'],
       },
       keyframes: {
         "accordion-down": {
