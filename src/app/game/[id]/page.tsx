@@ -67,12 +67,13 @@ export default function GamePage() {
         .order('round', { ascending: true })
 
       if (scoresError) throw scoresError
-      setScores(scoresData as Score[])
+      const typedScores = scoresData as Score[]
+      setScores(typedScores)
 
       // Calculate current round
-      if (scoresData && scoresData.length > 0) {
-        const maxRound = Math.max(...scoresData.map((s) => s.round))
-        const roundComplete = scoresData.filter((s) => s.round === maxRound).length ===
+      if (typedScores && typedScores.length > 0) {
+        const maxRound = Math.max(...typedScores.map((s) => s.round))
+        const roundComplete = typedScores.filter((s) => s.round === maxRound).length ===
           gameData.game_players.length
         setCurrentRound(roundComplete ? maxRound + 1 : maxRound)
       }
