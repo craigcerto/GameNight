@@ -4,28 +4,28 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-neon-pink",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-white/20 bg-transparent hover:border-neon-pink/50 hover:bg-neon-pink/5",
+          "border border-white/20 bg-white/5 text-white/80 hover:bg-white/10 hover:border-white/30 hover:text-white",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-neon-cyan",
-        ghost: "hover:bg-white/5 hover:text-neon-pink",
-        link: "text-neon-cyan underline-offset-4 hover:underline",
-        gold: "bg-neon-pink text-white font-semibold hover:shadow-neon-pink",
-        neon: "bg-transparent border-2 border-neon-pink text-neon-pink hover:bg-neon-pink/10 hover:shadow-neon-pink",
-        "neon-cyan": "bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 hover:shadow-neon-cyan",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-white/10 hover:text-white",
+        link: "text-primary underline-offset-4 hover:underline",
+        gold: "btn-arcade-primary text-white",
+        neon: "btn-arcade-secondary",
+        "neon-cyan": "btn-arcade-secondary",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3 text-xs",
-        lg: "h-11 rounded-lg px-8",
-        xl: "h-14 rounded-xl px-10 text-lg font-bold",
+        default: "h-11 px-5 py-2",
+        sm: "h-9 rounded-lg px-4 text-xs",
+        lg: "h-12 rounded-xl px-8 text-base",
+        xl: "h-14 rounded-xl px-10 text-lg",
         icon: "h-10 w-10",
       },
     },

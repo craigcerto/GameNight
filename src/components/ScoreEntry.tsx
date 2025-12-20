@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, KeyboardEvent } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Check, RotateCcw } from 'lucide-react'
+import { Check, RotateCcw, Hash } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Player } from '@/lib/types'
 
@@ -83,34 +83,36 @@ export function ScoreEntry({
 
   return (
     <Card className={cn("", className)}>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-center">
-          Round <span className="text-neon-cyan drop-shadow-[0_0_5px_#00f0ff]">{round}</span>
+      <CardHeader className="border-b border-white/5">
+        <CardTitle className="flex items-center justify-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-[#00f0ff]/20 flex items-center justify-center">
+            <Hash className="h-4 w-4 text-[#00f0ff]" />
+          </div>
+          <span className="text-white">
+            Round <span className="text-[#00f0ff] text-glow-cyan font-bold">{round}</span>
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4">
         <div className="space-y-3">
           {players.map((player, index) => (
             <div
               key={player.id}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors"
             >
               {/* Player indicator */}
               <div
-                className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-white font-bold shrink-0"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shrink-0 transition-all duration-300"
                 style={{
-                  borderColor: player.color,
                   backgroundColor: player.color,
+                  boxShadow: `0 0 15px ${player.color}40`,
                 }}
               >
                 {player.name.charAt(0)}
               </div>
 
               {/* Player name */}
-              <span
-                className="font-medium w-24 truncate"
-                style={{ color: player.color }}
-              >
+              <span className="font-medium w-24 truncate text-white/80">
                 {player.name}
               </span>
 
@@ -125,7 +127,7 @@ export function ScoreEntry({
                 onChange={(e) => handleScoreChange(player.id, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, player.id, index)}
                 disabled={disabled}
-                className="w-24 text-center text-lg font-semibold score-input"
+                className="w-24 text-center text-lg font-bold tabular-nums"
               />
             </div>
           ))}
@@ -153,7 +155,7 @@ export function ScoreEntry({
           </Button>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-3">
+        <p className="text-center text-xs text-white/30 mt-4">
           Press Enter to move to next player or submit
         </p>
       </CardContent>

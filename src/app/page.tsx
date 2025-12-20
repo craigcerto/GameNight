@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Play, Trophy, TrendingUp, Clock } from 'lucide-react'
+import { Play, Trophy, TrendingUp, Clock, Sparkles, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { GameHistory } from '@/components/GameHistory'
@@ -102,29 +102,29 @@ export default function HomePage() {
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
         <div className="mb-8">
-          <Trophy className="h-16 w-16 mx-auto text-gn-gold mb-4" />
-          <h1 className="font-display text-4xl font-bold text-gn-gold neon-text mb-4">
+          <Trophy className="h-16 w-16 mx-auto text-[#ff2d75] mb-4" />
+          <h1 className="font-display text-4xl font-bold gradient-text mb-4">
             GameNight
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-white/60">
             Score tracker for your game nights
           </p>
         </div>
 
-        <Card className="border-yellow-500/50 bg-yellow-500/10">
+        <Card className="card-highlight">
           <CardContent className="p-6">
-            <h2 className="text-lg font-semibold text-yellow-500 mb-2">
+            <h2 className="text-lg font-semibold text-[#ffe135] mb-2">
               Setup Required
             </h2>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-white/60 mb-4">
               To get started, you need to configure Supabase:
             </p>
-            <ol className="text-left text-sm space-y-2 text-muted-foreground">
-              <li>1. Create a free account at <a href="https://supabase.com" className="text-gn-gold underline">supabase.com</a></li>
+            <ol className="text-left text-sm space-y-2 text-white/50">
+              <li>1. Create a free account at <a href="https://supabase.com" className="text-[#00f0ff] underline hover:text-[#00f0ff]/80">supabase.com</a></li>
               <li>2. Create a new project</li>
-              <li>3. Run the SQL migrations from <code className="bg-muted px-1 rounded">supabase/migrations/</code></li>
-              <li>4. Copy <code className="bg-muted px-1 rounded">.env.local.example</code> to <code className="bg-muted px-1 rounded">.env.local</code></li>
-              <li>5. Add your Supabase URL and anon key to <code className="bg-muted px-1 rounded">.env.local</code></li>
+              <li>3. Run the SQL migrations from <code className="bg-white/10 px-2 py-0.5 rounded">supabase/migrations/</code></li>
+              <li>4. Copy <code className="bg-white/10 px-2 py-0.5 rounded">.env.local.example</code> to <code className="bg-white/10 px-2 py-0.5 rounded">.env.local</code></li>
+              <li>5. Add your Supabase URL and anon key</li>
               <li>6. Restart the dev server</li>
             </ol>
           </CardContent>
@@ -134,114 +134,157 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Hero section with neon logo */}
-      <div className="text-center py-12">
-        <div className="flex justify-center mb-8">
-          <Image
-            src="/images/neon.png"
-            alt="GameNight"
-            width={320}
-            height={160}
-            className="max-w-full h-auto drop-shadow-[0_0_30px_rgba(255,45,117,0.5)]"
-            priority
-          />
+    <div className="space-y-10">
+      {/* Hero section */}
+      <section className="relative py-16 text-center">
+        {/* Background glow effect */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#ff2d75]/20 rounded-full blur-[120px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-[#00f0ff]/10 rounded-full blur-[100px]" />
         </div>
-        <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto">
-          Track scores for Dominoes, Rummy, Mahjong and more!
-        </p>
-        <Link href="/play">
-          <Button variant="gold" size="xl" className="neon-glow">
-            <Play className="h-5 w-5 mr-2" />
-            Start New Game
-          </Button>
-        </Link>
-      </div>
+
+        <div className="relative z-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <Image
+                src="/images/neon.png"
+                alt="GameNight"
+                width={380}
+                height={190}
+                className="max-w-full h-auto"
+                style={{
+                  filter: 'drop-shadow(0 0 40px rgba(255, 45, 117, 0.5)) drop-shadow(0 0 80px rgba(255, 45, 117, 0.3))'
+                }}
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Tagline */}
+          <p className="text-xl text-white/50 mb-10 max-w-lg mx-auto font-light tracking-wide">
+            Track scores for Dominoes, Rummy, Mahjong and more
+          </p>
+
+          {/* CTA Button */}
+          <Link href="/play">
+            <Button variant="gold" size="xl" className="glow-pulse group">
+              <Play className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+              Start New Game
+              <Sparkles className="h-4 w-4 ml-2 opacity-70" />
+            </Button>
+          </Link>
+        </div>
+      </section>
 
       {/* Active Games Section */}
       {activeGames.length > 0 && (
-        <Card className="border-neon-cyan/50 bg-neon-cyan/5 shadow-[0_0_20px_rgba(0,240,255,0.15)]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-neon-cyan">
-              <Clock className="h-5 w-5 animate-pulse" />
-              Game In Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {activeGames.map((game) => (
-                <Link key={game.id} href={`/game/${game.id}`}>
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-card/50 border border-white/10 hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all duration-300 cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">
-                        {game.game_type === 'dominoes' && '🁣'}
-                        {game.game_type === 'rummy' && '🃏'}
-                        {game.game_type === 'mahjong' && '🀄'}
-                      </span>
-                      <div>
-                        <p className="font-semibold capitalize">{game.game_type}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {game.game_players.length} players
-                        </p>
-                      </div>
-                    </div>
-                    <Button variant="neon-cyan" size="sm">
-                      Resume
-                    </Button>
+        <section>
+          <Card className="card-cyan overflow-hidden">
+            <CardHeader className="border-b border-[#00f0ff]/20">
+              <CardTitle className="flex items-center gap-3">
+                <div className="relative">
+                  <Clock className="h-5 w-5 text-[#00f0ff]" />
+                  <div className="absolute inset-0 animate-ping">
+                    <Clock className="h-5 w-5 text-[#00f0ff] opacity-40" />
                   </div>
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                </div>
+                <span className="text-[#00f0ff] font-semibold">Game In Progress</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                {activeGames.map((game) => (
+                  <Link key={game.id} href={`/game/${game.id}`}>
+                    <div className="group flex items-center justify-between p-4 rounded-xl bg-black/30 border border-white/5 hover:border-[#00f0ff]/40 hover:bg-[#00f0ff]/5 transition-all duration-300 cursor-pointer">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl">
+                          {game.game_type === 'dominoes' && '🁣'}
+                          {game.game_type === 'rummy' && '🃏'}
+                          {game.game_type === 'mahjong' && '🀄'}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white capitalize">{game.game_type}</p>
+                          <p className="text-sm text-white/40">
+                            {game.game_players.length} players
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="neon-cyan" size="sm" className="group-hover:glow-cyan">
+                        Resume
+                        <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
       )}
 
-      <div className="grid md:grid-cols-3 gap-6">
+      {/* Stats Grid */}
+      <section className="grid md:grid-cols-3 gap-6">
         {/* Top Players */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-neon-pink" />
-              <span className="bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent">
-                Top Players
-              </span>
+          <CardHeader className="border-b border-white/5">
+            <CardTitle className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#ff2d75]/20 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-[#ff2d75]" />
+              </div>
+              <span className="gradient-text font-semibold">Top Players</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             {loading ? (
-              <p className="text-muted-foreground">Loading...</p>
+              <div className="flex items-center justify-center py-8">
+                <div className="w-6 h-6 border-2 border-[#ff2d75] border-t-transparent rounded-full animate-spin" />
+              </div>
             ) : topPlayers.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {topPlayers.map((entry, index) => (
                   <div
                     key={entry.player.id}
-                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ${
-                      index === 0 ? 'bg-neon-pink/10' : 'hover:bg-white/5'
+                    className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      index === 0
+                        ? 'bg-gradient-to-r from-[#ff2d75]/20 to-transparent border border-[#ff2d75]/20'
+                        : 'hover:bg-white/5'
                     }`}
                   >
-                    <span className={`w-6 text-center font-bold ${
-                      index === 0 ? 'text-neon-pink' : 'text-muted-foreground'
+                    {/* Rank Badge */}
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                      index === 0
+                        ? 'bg-gradient-to-br from-[#ffd700] to-[#ff8c00] text-black shadow-[0_0_15px_rgba(255,215,0,0.5)]'
+                        : index === 1
+                        ? 'bg-gradient-to-br from-[#c0c0c0] to-[#808080] text-black'
+                        : index === 2
+                        ? 'bg-gradient-to-br from-[#cd7f32] to-[#8b4513] text-black'
+                        : 'bg-white/10 text-white/60'
                     }`}>
-                      #{index + 1}
-                    </span>
+                      {index + 1}
+                    </div>
+
+                    {/* Player Avatar */}
                     <div
-                      className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-white text-sm font-bold"
+                      className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold transition-all duration-300"
                       style={{
-                        borderColor: entry.player.color,
                         backgroundColor: entry.player.color,
-                        boxShadow: index === 0 ? `0 0 10px ${entry.player.color}` : undefined,
+                        boxShadow: index === 0 ? `0 0 20px ${entry.player.color}80` : undefined,
                       }}
                     >
                       {entry.player.name.charAt(0)}
                     </div>
-                    <span
-                      className="font-medium flex-1"
-                      style={{ color: entry.player.color }}
-                    >
+
+                    {/* Name */}
+                    <span className="font-medium flex-1 text-white/90">
                       {entry.player.name}
                     </span>
-                    <span className={`font-semibold ${
-                      index === 0 ? 'text-neon-pink drop-shadow-[0_0_5px_#ff2d75]' : 'text-neon-cyan'
+
+                    {/* Wins */}
+                    <span className={`font-bold text-sm px-2 py-1 rounded-lg ${
+                      index === 0
+                        ? 'bg-[#ff2d75]/20 text-[#ff2d75]'
+                        : 'text-white/50'
                     }`}>
                       {entry.wins} {entry.wins === 1 ? 'win' : 'wins'}
                     </span>
@@ -249,30 +292,49 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">
-                No games played yet
-              </p>
+              <div className="text-center py-8">
+                <Trophy className="h-10 w-10 mx-auto text-white/20 mb-3" />
+                <p className="text-white/40 text-sm">
+                  No games played yet
+                </p>
+              </div>
             )}
           </CardContent>
         </Card>
 
         {/* Recent Games */}
         <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-neon-yellow" />
-              <span className="text-white">Recent Games</span>
+          <CardHeader className="border-b border-white/5">
+            <CardTitle className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#ffe135]/20 flex items-center justify-center">
+                <Trophy className="h-4 w-4 text-[#ffe135]" />
+              </div>
+              <span className="text-white font-semibold">Recent Games</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             {loading ? (
-              <p className="text-muted-foreground">Loading...</p>
-            ) : (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-6 h-6 border-2 border-[#ff2d75] border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : games.length > 0 ? (
               <GameHistory games={games} />
+            ) : (
+              <div className="text-center py-12">
+                <Play className="h-10 w-10 mx-auto text-white/20 mb-3" />
+                <p className="text-white/40 text-sm mb-4">
+                  No games completed yet
+                </p>
+                <Link href="/play">
+                  <Button variant="outline" size="sm">
+                    Start your first game
+                  </Button>
+                </Link>
+              </div>
             )}
           </CardContent>
         </Card>
-      </div>
+      </section>
     </div>
   )
 }

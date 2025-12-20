@@ -11,10 +11,10 @@ interface GameTypeSelectorProps {
   className?: string
 }
 
-const gameTypes: { type: GameType; icon: string; color: string }[] = [
-  { type: 'dominoes', icon: '/images/games/dominoes.png', color: '#586F7C' },
-  { type: 'rummy', icon: '/images/games/rummy.png', color: '#8B4513' },
-  { type: 'mahjong', icon: '/images/games/mahjong.png', color: '#228B22' },
+const gameTypes: { type: GameType; icon: string; emoji: string }[] = [
+  { type: 'dominoes', icon: '/images/games/dominoes.png', emoji: '🁣' },
+  { type: 'rummy', icon: '/images/games/rummy.png', emoji: '🃏' },
+  { type: 'mahjong', icon: '/images/games/mahjong.png', emoji: '🀄' },
 ]
 
 export function GameTypeSelector({
@@ -24,50 +24,51 @@ export function GameTypeSelector({
 }: GameTypeSelectorProps) {
   return (
     <div className={cn("grid grid-cols-3 gap-4", className)}>
-      {gameTypes.map(({ type, icon, color }) => (
+      {gameTypes.map(({ type, icon, emoji }) => (
         <button
           key={type}
           type="button"
           onClick={() => onSelect(type)}
           className={cn(
-            "flex flex-col items-center justify-center p-6 rounded-xl border-2 bg-card/50 backdrop-blur-sm transition-all duration-300",
+            "group relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-300",
             selected === type
-              ? "border-neon-pink shadow-[0_0_20px_rgba(255,45,117,0.4)] bg-neon-pink/10"
-              : "border-white/10 hover:border-neon-cyan/50 hover:bg-neon-cyan/5"
+              ? "border-[#ff2d75] bg-[#ff2d75]/10 shadow-[0_0_30px_rgba(255,45,117,0.3)]"
+              : "border-white/10 bg-white/5 hover:border-[#00f0ff]/50 hover:bg-[#00f0ff]/5"
           )}
         >
-          <div className="relative w-16 h-16 mb-3">
-            <Image
-              src={icon}
-              alt={GAME_TYPE_LABELS[type]}
-              fill
-              className="object-contain"
-              onError={(e) => {
-                // Fallback if image doesn't exist
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-              }}
-            />
-            {/* Fallback icon */}
-            <div className={cn(
-              "absolute inset-0 flex items-center justify-center text-4xl transition-transform duration-300",
-              selected === type && "scale-110"
-            )}>
-              {type === 'dominoes' && '🁣'}
-              {type === 'rummy' && '🃏'}
-              {type === 'mahjong' && '🀄'}
-            </div>
+          {/* Glow effect for selected */}
+          {selected === type && (
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#ff2d75]/20 to-transparent pointer-events-none" />
+          )}
+
+          {/* Icon container */}
+          <div className={cn(
+            "relative w-16 h-16 mb-4 flex items-center justify-center text-5xl transition-transform duration-300",
+            selected === type && "scale-110"
+          )}>
+            {emoji}
           </div>
+
+          {/* Label */}
           <span
             className={cn(
-              "font-display text-lg font-semibold transition-all duration-300",
+              "font-semibold text-lg transition-all duration-300",
               selected === type
-                ? "text-neon-pink drop-shadow-[0_0_5px_#ff2d75]"
-                : "text-foreground"
+                ? "text-[#ff2d75] text-glow-pink"
+                : "text-white/70 group-hover:text-white"
             )}
           >
             {GAME_TYPE_LABELS[type]}
           </span>
+
+          {/* Selection indicator */}
+          {selected === type && (
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#ff2d75] rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(255,45,117,0.5)]">
+              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          )}
         </button>
       ))}
     </div>

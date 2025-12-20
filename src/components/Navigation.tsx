@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Play, Users, Trophy } from 'lucide-react'
+import { Home, Play, Users, Gamepad2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -15,18 +15,21 @@ export function Navigation() {
   const pathname = usePathname()
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-neon-pink/20 bg-background/80 backdrop-blur-lg">
-      <div className="container flex h-16 items-center">
+    <nav className="sticky top-0 z-50 w-full nav-arcade">
+      <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="mr-8 flex items-center space-x-2 group">
-          <Trophy className="h-6 w-6 text-neon-pink transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff2d75]" />
-          <span className="font-display text-xl font-bold bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff2d75]">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative">
+            <Gamepad2 className="h-8 w-8 text-[#ff2d75] transition-all duration-300 group-hover:scale-110" />
+            <div className="absolute inset-0 blur-lg bg-[#ff2d75]/30 group-hover:bg-[#ff2d75]/50 transition-all duration-300" />
+          </div>
+          <span className="font-display text-2xl font-bold gradient-text tracking-tight">
             GameNight
           </span>
         </Link>
 
         {/* Nav Links */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href ||
@@ -37,13 +40,16 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                   isActive
-                    ? "text-neon-pink bg-neon-pink/10 shadow-[0_0_10px_rgba(255,45,117,0.3)]"
-                    : "text-muted-foreground hover:text-neon-cyan hover:bg-neon-cyan/5"
+                    ? "bg-[#ff2d75]/15 text-[#ff2d75] shadow-[0_0_20px_rgba(255,45,117,0.2)]"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className={cn(
+                  "h-4 w-4 transition-all duration-300",
+                  isActive && "drop-shadow-[0_0_8px_rgba(255,45,117,0.8)]"
+                )} />
                 <span>{item.label}</span>
               </Link>
             )

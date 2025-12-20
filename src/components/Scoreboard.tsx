@@ -48,64 +48,67 @@ export function Scoreboard({
 
   return (
     <Card className={cn("", className)}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-neon-pink" />
-          <span className="bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent">
-            Standings
-          </span>
+      <CardHeader className="border-b border-white/5">
+        <CardTitle className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-[#ff2d75]/20 flex items-center justify-center">
+            <Trophy className="h-4 w-4 text-[#ff2d75]" />
+          </div>
+          <span className="gradient-text font-semibold">Standings</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="p-4 space-y-2">
         {standings.map((standing, index) => (
           <div
             key={standing.player.id}
             className={cn(
-              "flex items-center gap-3 p-3 rounded-lg transition-all duration-300",
+              "flex items-center gap-3 p-3 rounded-xl transition-all duration-300",
               index === 0
-                ? "bg-neon-pink/10 border border-neon-pink/30 shadow-[0_0_15px_rgba(255,45,117,0.15)]"
+                ? "bg-gradient-to-r from-[#ff2d75]/15 to-transparent border border-[#ff2d75]/20 shadow-[0_0_20px_rgba(255,45,117,0.1)]"
                 : "hover:bg-white/5"
             )}
           >
-            {/* Rank */}
-            <div className="w-8 flex justify-center">
+            {/* Rank Badge */}
+            <div className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+              index === 0
+                ? "bg-gradient-to-br from-[#ffd700] to-[#ff8c00] text-black shadow-[0_0_15px_rgba(255,215,0,0.5)]"
+                : index === 1
+                ? "bg-gradient-to-br from-[#c0c0c0] to-[#808080] text-black"
+                : index === 2
+                ? "bg-gradient-to-br from-[#cd7f32] to-[#8b4513] text-black"
+                : "bg-white/10 text-white/50"
+            )}>
               {index === 0 ? (
-                <Trophy className="h-5 w-5 text-neon-pink drop-shadow-[0_0_5px_#ff2d75]" />
-              ) : index === 1 ? (
-                <Medal className="h-5 w-5 text-neon-cyan" />
-              ) : index === 2 ? (
-                <Medal className="h-5 w-5 text-neon-yellow" />
+                <Trophy className="h-4 w-4" />
+              ) : index === 1 || index === 2 ? (
+                <Medal className="h-4 w-4" />
               ) : (
-                <span className="text-muted-foreground font-medium">
-                  #{index + 1}
-                </span>
+                index + 1
               )}
             </div>
 
             {/* Player avatar */}
             <div
-              className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-white font-bold shadow-lg"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-all duration-300"
               style={{
-                borderColor: standing.player.color,
                 backgroundColor: standing.player.color,
-                boxShadow: index === 0 ? `0 0 10px ${standing.player.color}` : undefined,
+                boxShadow: index === 0 ? `0 0 20px ${standing.player.color}60` : undefined,
               }}
             >
               {standing.player.name.charAt(0)}
             </div>
 
             {/* Player name */}
-            <span
-              className="font-medium flex-1"
-              style={{ color: standing.player.color }}
-            >
+            <span className="font-medium flex-1 text-white/90">
               {standing.player.name}
             </span>
 
             {/* Total score */}
             <span className={cn(
-              "font-bold text-xl",
-              index === 0 ? "text-neon-pink drop-shadow-[0_0_5px_#ff2d75]" : "text-neon-cyan"
+              "font-bold text-xl tabular-nums",
+              index === 0
+                ? "text-[#ff2d75] text-glow-pink"
+                : "text-[#00f0ff]"
             )}>
               {standing.total}
             </span>
