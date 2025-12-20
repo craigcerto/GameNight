@@ -49,16 +49,16 @@ export function PlayerCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "player-card flex flex-col items-center rounded-lg border bg-card transition-all",
+        "flex flex-col items-center rounded-xl border bg-card/50 backdrop-blur-sm transition-all duration-300",
         config.container,
-        selected && "selected ring-2",
-        onClick && "cursor-pointer hover:bg-accent",
+        selected && "ring-2",
+        onClick && "cursor-pointer hover:bg-white/5",
         !onClick && "cursor-default",
         className
       )}
       style={{
-        borderColor: selected ? player.color : undefined,
-        boxShadow: selected ? `0 0 15px ${player.color}40` : undefined,
+        borderColor: selected ? player.color : 'rgba(255,255,255,0.1)',
+        boxShadow: selected ? `0 0 20px ${player.color}60, inset 0 0 15px ${player.color}10` : undefined,
       }}
       disabled={!onClick}
     >
@@ -142,7 +142,7 @@ export function PlayerBadge({
       </span>
 
       {score !== undefined && (
-        <span className="ml-auto font-bold text-lg text-gn-gold">
+        <span className="ml-auto font-bold text-lg text-neon-cyan">
           {score}
         </span>
       )}

@@ -10,14 +10,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // GameNight custom color palette
-        'gn-darkblue': '#586F7C',
-        'gn-gold': '#C6A15B',
-        'gn-licorice': '#231B1B',
-        'gn-white': '#F4F4F9',
-        'gn-purple': '#321D71',
+        // Modern Neon color palette
+        'neon-pink': '#ff2d75',
+        'neon-cyan': '#00f0ff',
+        'neon-purple': '#9d4edd',
+        'neon-yellow': '#f0e130',
+        'neon-green': '#39ff14',
 
-        // Semantic colors using the palette
+        // Legacy colors (keeping for compatibility)
+        'gn-darkblue': '#586F7C',
+        'gn-gold': '#ff2d75', // Now maps to neon pink
+        'gn-licorice': '#0a0a0f',
+        'gn-white': '#F4F4F9',
+        'gn-purple': '#9d4edd',
+
+        // Semantic colors
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -70,24 +77,44 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "glow": {
+        "neon-pulse": {
           "0%, 100%": {
-            boxShadow: "0 0 5px #C6A15B, 0 0 10px #C6A15B, 0 0 15px #C6A15B"
+            boxShadow: "0 0 5px #ff2d75, 0 0 10px #ff2d75, 0 0 15px #ff2d75"
           },
           "50%": {
-            boxShadow: "0 0 10px #C6A15B, 0 0 20px #C6A15B, 0 0 30px #C6A15B"
+            boxShadow: "0 0 10px #ff2d75, 0 0 20px #ff2d75, 0 0 30px #ff2d75, 0 0 40px #ff2d75"
           },
         },
-        "pulse-gold": {
+        "glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 5px #ff2d75, 0 0 10px #ff2d75, 0 0 15px #ff2d75"
+          },
+          "50%": {
+            boxShadow: "0 0 10px #ff2d75, 0 0 20px #ff2d75, 0 0 30px #ff2d75"
+          },
+        },
+        "pulse-neon": {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.7" },
+          "50%": { opacity: "0.8" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
         "glow": "glow 2s ease-in-out infinite",
-        "pulse-gold": "pulse-gold 2s ease-in-out infinite",
+        "pulse-neon": "pulse-neon 2s ease-in-out infinite",
+        "pulse-gold": "pulse-neon 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+      },
+      boxShadow: {
+        'neon-pink': '0 0 10px #ff2d75, 0 0 20px #ff2d75',
+        'neon-cyan': '0 0 10px #00f0ff, 0 0 20px #00f0ff',
+        'neon-purple': '0 0 10px #9d4edd, 0 0 20px #9d4edd',
       },
     },
   },

@@ -4,42 +4,48 @@
 
 @layer base {
   :root {
-    /* Original GameNight colors:
-       Dark Blue: #586F7C
-       Gold: #C6A15B
-       Licorice: #231B1B
-       White: #F4F4F9
-       Cream: #F2E3BC
+    /* Modern Neon Color Scheme
+       Background: Deep dark (#0a0a0f)
+       Neon Pink: #ff2d75
+       Neon Cyan: #00f0ff
+       Neon Purple: #9d4edd
+       Neon Yellow: #f0e130
     */
-    --background: 200 16% 30%;
-    --foreground: 240 10% 97%;
+    --background: 240 20% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 40 38% 56%;
-    --card-foreground: 20 14% 12%;
+    --card: 240 15% 8%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 200 16% 25%;
-    --popover-foreground: 240 10% 97%;
+    --popover: 240 15% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 40 38% 56%;
-    --primary-foreground: 20 14% 12%;
+    --primary: 340 100% 59%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 16% 42%;
-    --secondary-foreground: 240 10% 97%;
+    --secondary: 186 100% 50%;
+    --secondary-foreground: 240 20% 4%;
 
-    --muted: 200 16% 35%;
-    --muted-foreground: 240 10% 75%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 5% 60%;
 
-    --accent: 40 38% 56%;
-    --accent-foreground: 20 14% 12%;
+    --accent: 270 80% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 240 10% 97%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 200 16% 40%;
-    --input: 42 40% 85%;
-    --ring: 40 38% 56%;
+    --border: 240 10% 20%;
+    --input: 240 10% 15%;
+    --ring: 340 100% 59%;
 
     --radius: 0.75rem;
+
+    /* Neon color variables */
+    --neon-pink: #ff2d75;
+    --neon-cyan: #00f0ff;
+    --neon-purple: #9d4edd;
+    --neon-yellow: #f0e130;
   }
 }
 
@@ -48,64 +54,146 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom neon glow effects */
+/* Modern neon glow effects */
 .neon-text {
   text-shadow:
-    0 0 5px #C6A15B,
-    0 0 10px #C6A15B,
-    0 0 20px #C6A15B,
-    0 0 40px #C6A15B;
+    0 0 5px var(--neon-pink),
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    0 0 40px var(--neon-pink);
+}
+
+.neon-text-cyan {
+  text-shadow:
+    0 0 5px var(--neon-cyan),
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan);
 }
 
 .neon-border {
   box-shadow:
-    0 0 5px #C6A15B,
-    0 0 10px #C6A15B,
-    inset 0 0 5px rgba(198, 161, 91, 0.3);
+    0 0 5px var(--neon-pink),
+    0 0 10px var(--neon-pink),
+    inset 0 0 5px rgba(255, 45, 117, 0.2);
 }
 
+.neon-border-cyan {
+  box-shadow:
+    0 0 5px var(--neon-cyan),
+    0 0 10px var(--neon-cyan),
+    inset 0 0 5px rgba(0, 240, 255, 0.2);
+}
+
+/* Animated glow */
 .neon-glow {
-  animation: glow 2s ease-in-out infinite;
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 5px var(--neon-pink),
+      0 0 10px var(--neon-pink),
+      0 0 15px var(--neon-pink);
+  }
+  50% {
+    box-shadow:
+      0 0 10px var(--neon-pink),
+      0 0 20px var(--neon-pink),
+      0 0 30px var(--neon-pink),
+      0 0 40px var(--neon-pink);
+  }
 }
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 5px #C6A15B, 0 0 10px #C6A15B, 0 0 15px #C6A15B;
+    box-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 15px var(--neon-pink);
   }
   50% {
-    box-shadow: 0 0 10px #C6A15B, 0 0 20px #C6A15B, 0 0 30px #C6A15B;
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
   }
+}
+
+/* Glass morphism card effect */
+.glass-card {
+  background: rgba(15, 15, 25, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 45, 117, 0.3);
+  box-shadow: 0 0 20px rgba(255, 45, 117, 0.15);
 }
 
 /* Game card hover effects */
 .game-card {
   @apply transition-all duration-300 ease-in-out;
+  background: rgba(15, 15, 25, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .game-card:hover {
   @apply transform scale-105;
-  box-shadow: 0 0 20px rgba(198, 161, 91, 0.5);
+  border-color: var(--neon-pink);
+  box-shadow:
+    0 0 20px rgba(255, 45, 117, 0.4),
+    inset 0 0 20px rgba(255, 45, 117, 0.05);
 }
 
 /* Player card styles */
 .player-card {
   @apply transition-all duration-200;
+  background: rgba(15, 15, 25, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-card:hover {
+  border-color: rgba(255, 45, 117, 0.5);
 }
 
 .player-card.selected {
-  @apply ring-2 ring-gn-gold;
-  box-shadow: 0 0 15px rgba(198, 161, 91, 0.4);
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 15px rgba(0, 240, 255, 0.4),
+    inset 0 0 15px rgba(0, 240, 255, 0.05);
 }
 
 /* Score input animation */
+.score-input {
+  @apply transition-all duration-200;
+  background: rgba(15, 15, 25, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .score-input:focus {
-  @apply ring-2 ring-gn-gold outline-none;
-  box-shadow: 0 0 10px rgba(198, 161, 91, 0.3);
+  @apply outline-none;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+/* Button glow on hover */
+.btn-neon {
+  @apply transition-all duration-300;
+}
+
+.btn-neon:hover {
+  box-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Scrollbar styling */
@@ -115,13 +203,41 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gn-licorice;
+  background: rgba(10, 10, 15, 0.8);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gn-darkblue rounded-full;
+  background: linear-gradient(180deg, var(--neon-pink), var(--neon-purple));
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gn-gold;
+  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-pink));
+}
+
+/* Subtle grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255, 45, 117, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 45, 117, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan), var(--neon-purple));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }

@@ -30,10 +30,10 @@ export function GameTypeSelector({
           type="button"
           onClick={() => onSelect(type)}
           className={cn(
-            "game-card flex flex-col items-center justify-center p-6 rounded-xl border-2 bg-card transition-all",
+            "flex flex-col items-center justify-center p-6 rounded-xl border-2 bg-card/50 backdrop-blur-sm transition-all duration-300",
             selected === type
-              ? "border-gn-gold neon-border"
-              : "border-border hover:border-gn-gold/50"
+              ? "border-neon-pink shadow-[0_0_20px_rgba(255,45,117,0.4)] bg-neon-pink/10"
+              : "border-white/10 hover:border-neon-cyan/50 hover:bg-neon-cyan/5"
           )}
         >
           <div className="relative w-16 h-16 mb-3">
@@ -49,7 +49,10 @@ export function GameTypeSelector({
               }}
             />
             {/* Fallback icon */}
-            <div className="absolute inset-0 flex items-center justify-center text-4xl">
+            <div className={cn(
+              "absolute inset-0 flex items-center justify-center text-4xl transition-transform duration-300",
+              selected === type && "scale-110"
+            )}>
               {type === 'dominoes' && '🁣'}
               {type === 'rummy' && '🃏'}
               {type === 'mahjong' && '🀄'}
@@ -57,8 +60,10 @@ export function GameTypeSelector({
           </div>
           <span
             className={cn(
-              "font-display text-lg font-semibold",
-              selected === type ? "text-gn-gold" : "text-foreground"
+              "font-display text-lg font-semibold transition-all duration-300",
+              selected === type
+                ? "text-neon-pink drop-shadow-[0_0_5px_#ff2d75]"
+                : "text-foreground"
             )}
           >
             {GAME_TYPE_LABELS[type]}

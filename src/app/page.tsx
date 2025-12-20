@@ -136,22 +136,22 @@ export default function HomePage() {
   return (
     <div className="space-y-8">
       {/* Hero section with neon logo */}
-      <div className="text-center py-8">
-        <div className="flex justify-center mb-6">
+      <div className="text-center py-12">
+        <div className="flex justify-center mb-8">
           <Image
             src="/images/neon.png"
             alt="GameNight"
-            width={300}
-            height={150}
-            className="max-w-full h-auto"
+            width={320}
+            height={160}
+            className="max-w-full h-auto drop-shadow-[0_0_30px_rgba(255,45,117,0.5)]"
             priority
           />
         </div>
-        <p className="text-xl text-muted-foreground mb-8">
+        <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto">
           Track scores for Dominoes, Rummy, Mahjong and more!
         </p>
         <Link href="/play">
-          <Button variant="gold" size="xl" className="animate-pulse-gold">
+          <Button variant="gold" size="xl" className="neon-glow">
             <Play className="h-5 w-5 mr-2" />
             Start New Game
           </Button>
@@ -160,10 +160,10 @@ export default function HomePage() {
 
       {/* Active Games Section */}
       {activeGames.length > 0 && (
-        <Card className="border-gn-gold/50 bg-gn-gold/5">
+        <Card className="border-neon-cyan/50 bg-neon-cyan/5 shadow-[0_0_20px_rgba(0,240,255,0.15)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gn-gold">
-              <Clock className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-neon-cyan">
+              <Clock className="h-5 w-5 animate-pulse" />
               Game In Progress
             </CardTitle>
           </CardHeader>
@@ -171,7 +171,7 @@ export default function HomePage() {
             <div className="space-y-3">
               {activeGames.map((game) => (
                 <Link key={game.id} href={`/game/${game.id}`}>
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-card hover:bg-accent transition-colors cursor-pointer">
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-card/50 border border-white/10 hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all duration-300 cursor-pointer">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">
                         {game.game_type === 'dominoes' && '🁣'}
@@ -185,7 +185,7 @@ export default function HomePage() {
                         </p>
                       </div>
                     </div>
-                    <Button variant="gold" size="sm">
+                    <Button variant="neon-cyan" size="sm">
                       Resume
                     </Button>
                   </div>
@@ -201,8 +201,10 @@ export default function HomePage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-gn-gold" />
-              Top Players
+              <TrendingUp className="h-5 w-5 text-neon-pink" />
+              <span className="bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent">
+                Top Players
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -213,9 +215,13 @@ export default function HomePage() {
                 {topPlayers.map((entry, index) => (
                   <div
                     key={entry.player.id}
-                    className="flex items-center gap-3"
+                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ${
+                      index === 0 ? 'bg-neon-pink/10' : 'hover:bg-white/5'
+                    }`}
                   >
-                    <span className="w-6 text-center font-bold text-muted-foreground">
+                    <span className={`w-6 text-center font-bold ${
+                      index === 0 ? 'text-neon-pink' : 'text-muted-foreground'
+                    }`}>
                       #{index + 1}
                     </span>
                     <div
@@ -223,6 +229,7 @@ export default function HomePage() {
                       style={{
                         borderColor: entry.player.color,
                         backgroundColor: entry.player.color,
+                        boxShadow: index === 0 ? `0 0 10px ${entry.player.color}` : undefined,
                       }}
                     >
                       {entry.player.name.charAt(0)}
@@ -233,7 +240,9 @@ export default function HomePage() {
                     >
                       {entry.player.name}
                     </span>
-                    <span className="text-gn-gold font-semibold">
+                    <span className={`font-semibold ${
+                      index === 0 ? 'text-neon-pink drop-shadow-[0_0_5px_#ff2d75]' : 'text-neon-cyan'
+                    }`}>
                       {entry.wins} {entry.wins === 1 ? 'win' : 'wins'}
                     </span>
                   </div>
@@ -251,8 +260,8 @@ export default function HomePage() {
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-gn-gold" />
-              Recent Games
+              <Trophy className="h-5 w-5 text-neon-yellow" />
+              <span className="text-white">Recent Games</span>
             </CardTitle>
           </CardHeader>
           <CardContent>

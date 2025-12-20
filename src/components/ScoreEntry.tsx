@@ -85,7 +85,7 @@ export function ScoreEntry({
     <Card className={cn("", className)}>
       <CardHeader className="pb-3">
         <CardTitle className="text-center">
-          Round <span className="text-gn-gold">{round}</span>
+          Round <span className="text-neon-cyan drop-shadow-[0_0_5px_#00f0ff]">{round}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>

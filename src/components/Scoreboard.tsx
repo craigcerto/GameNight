@@ -50,8 +50,10 @@ export function Scoreboard({
     <Card className={cn("", className)}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-gn-gold" />
-          Standings
+          <Trophy className="h-5 w-5 text-neon-pink" />
+          <span className="bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent">
+            Standings
+          </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -59,18 +61,20 @@ export function Scoreboard({
           <div
             key={standing.player.id}
             className={cn(
-              "flex items-center gap-3 p-3 rounded-lg transition-colors",
-              index === 0 && "bg-gn-gold/10 border border-gn-gold/30"
+              "flex items-center gap-3 p-3 rounded-lg transition-all duration-300",
+              index === 0
+                ? "bg-neon-pink/10 border border-neon-pink/30 shadow-[0_0_15px_rgba(255,45,117,0.15)]"
+                : "hover:bg-white/5"
             )}
           >
             {/* Rank */}
             <div className="w-8 flex justify-center">
               {index === 0 ? (
-                <Trophy className="h-5 w-5 text-gn-gold" />
+                <Trophy className="h-5 w-5 text-neon-pink drop-shadow-[0_0_5px_#ff2d75]" />
               ) : index === 1 ? (
-                <Medal className="h-5 w-5 text-gray-400" />
+                <Medal className="h-5 w-5 text-neon-cyan" />
               ) : index === 2 ? (
-                <Medal className="h-5 w-5 text-amber-600" />
+                <Medal className="h-5 w-5 text-neon-yellow" />
               ) : (
                 <span className="text-muted-foreground font-medium">
                   #{index + 1}
@@ -80,10 +84,11 @@ export function Scoreboard({
 
             {/* Player avatar */}
             <div
-              className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-white font-bold"
+              className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-white font-bold shadow-lg"
               style={{
                 borderColor: standing.player.color,
                 backgroundColor: standing.player.color,
+                boxShadow: index === 0 ? `0 0 10px ${standing.player.color}` : undefined,
               }}
             >
               {standing.player.name.charAt(0)}
@@ -98,7 +103,10 @@ export function Scoreboard({
             </span>
 
             {/* Total score */}
-            <span className="font-bold text-xl text-gn-gold">
+            <span className={cn(
+              "font-bold text-xl",
+              index === 0 ? "text-neon-pink drop-shadow-[0_0_5px_#ff2d75]" : "text-neon-cyan"
+            )}>
               {standing.total}
             </span>
           </div>

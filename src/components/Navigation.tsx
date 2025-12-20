@@ -15,18 +15,18 @@ export function Navigation() {
   const pathname = usePathname()
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b border-neon-pink/20 bg-background/80 backdrop-blur-lg">
       <div className="container flex h-16 items-center">
         {/* Logo */}
-        <Link href="/" className="mr-8 flex items-center space-x-2">
-          <Trophy className="h-6 w-6 text-gn-gold" />
-          <span className="font-display text-xl font-bold text-gn-gold neon-text">
+        <Link href="/" className="mr-8 flex items-center space-x-2 group">
+          <Trophy className="h-6 w-6 text-neon-pink transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff2d75]" />
+          <span className="font-display text-xl font-bold bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff2d75]">
             GameNight
           </span>
         </Link>
 
         {/* Nav Links */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-1">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href ||
@@ -37,10 +37,10 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-gn-gold",
+                  "flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                   isActive
-                    ? "text-gn-gold"
-                    : "text-muted-foreground"
+                    ? "text-neon-pink bg-neon-pink/10 shadow-[0_0_10px_rgba(255,45,117,0.3)]"
+                    : "text-muted-foreground hover:text-neon-cyan hover:bg-neon-cyan/5"
                 )}
               >
                 <Icon className="h-4 w-4" />
