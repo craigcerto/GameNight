@@ -34,11 +34,13 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
-      setLoading(false)
+      setTimeout(() => setLoading(false), 2000)
       return
     }
 
     async function loadPlayers() {
+      const startTime = Date.now()
+
       const { data, error } = await supabase
         .from('players')
         .select('*')
@@ -49,7 +51,11 @@ export default function PlayPage() {
       } else {
         setPlayers(data as Player[])
       }
-      setLoading(false)
+
+      // Ensure at least 2 seconds have passed
+      const elapsed = Date.now() - startTime
+      const remainingTime = Math.max(0, 2000 - elapsed)
+      setTimeout(() => setLoading(false), remainingTime)
     }
 
     loadPlayers()

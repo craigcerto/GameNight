@@ -41,13 +41,15 @@ export default function PlayersPage() {
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
-      setLoading(false)
+      setTimeout(() => setLoading(false), 2000)
       return
     }
     loadPlayers()
   }, [])
 
   async function loadPlayers() {
+    const startTime = Date.now()
+
     const { data, error } = await supabase
       .from('players')
       .select('*')
@@ -58,7 +60,11 @@ export default function PlayersPage() {
     } else {
       setPlayers(data as Player[])
     }
-    setLoading(false)
+
+    // Ensure at least 2 seconds have passed
+    const elapsed = Date.now() - startTime
+    const remainingTime = Math.max(0, 2000 - elapsed)
+    setTimeout(() => setLoading(false), remainingTime)
   }
 
   const resetForm = () => {

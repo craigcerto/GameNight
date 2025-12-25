@@ -52,6 +52,8 @@ export default function GamePage() {
   const players = game?.game_players.map((gp) => gp.player) || []
 
   const loadGame = useCallback(async () => {
+    const startTime = Date.now()
+
     try {
       // Load game with players
       const { data: gameData, error: gameError } = await supabase
@@ -102,7 +104,10 @@ export default function GamePage() {
         variant: 'destructive',
       })
     } finally {
-      setLoading(false)
+      // Ensure at least 2 seconds have passed
+      const elapsed = Date.now() - startTime
+      const remainingTime = Math.max(0, 2000 - elapsed)
+      setTimeout(() => setLoading(false), remainingTime)
     }
   }, [gameId, toast])
 
