@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Git
+.git/
+
+# Environment files
+.env
+.env*.local
+
+# Development
+*.log
+.DS_Store
+*.tsbuildinfo
+.cache/
+
+# Testing
+coverage/
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Scripts and utilities
+scripts/
+.vscode/
+.idea/
+
+# Database migrations (already deployed via Supabase)
+supabase/
