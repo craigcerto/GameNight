@@ -1,0 +1,5 @@
+node_modules/@swc/**
+node_modules/@next/**
+node_modules/webpack/**
+.git/**
+.next/**
