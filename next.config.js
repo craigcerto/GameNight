@@ -10,12 +10,6 @@ const nextConfig = {
       },
     ],
   },
-  // Exclude only problematic patterns, not everything
-  experimental: {
-    outputFileTracingExcludes: {
-      '/api/frank/dialogue': ['node_modules/**/*'],
-    },
-  },
 }
 
 module.exports = nextConfig
