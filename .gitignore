@@ -44,3 +44,7 @@ coverage/
 # Misc
 *.log
 .cache/
+
+# Utility scripts (not needed for deployment)
+scripts/
+source/
