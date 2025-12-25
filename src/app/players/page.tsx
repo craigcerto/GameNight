@@ -89,9 +89,9 @@ export default function PlayersPage() {
     try {
       if (editingPlayer) {
         // Update existing player
-        const { error } = await supabase
+        const { error } = await (supabase
           .from('players')
-          .update({
+          .update as any)({
             name: name.trim(),
             nickname: nickname.trim() || null,
             color,
@@ -106,7 +106,7 @@ export default function PlayersPage() {
         })
       } else {
         // Create new player
-        const { error } = await supabase.from('players').insert({
+        const { error } = await (supabase.from('players').insert as any)({
           name: name.trim(),
           nickname: nickname.trim() || null,
           color,

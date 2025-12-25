@@ -88,14 +88,14 @@ export default function HomePage() {
 
         if (playersData && winsData) {
           const winCounts: Record<string, number> = {}
-          winsData.forEach((g) => {
+          winsData.forEach((g: any) => {
             if (g.winner_id) {
               winCounts[g.winner_id] = (winCounts[g.winner_id] || 0) + 1
             }
           })
 
           const ranked = playersData
-            .map((p) => ({ player: p as Player, wins: winCounts[p.id] || 0 }))
+            .map((p: any) => ({ player: p as Player, wins: winCounts[p.id] || 0 }))
             .filter((p) => p.wins > 0)
             .sort((a, b) => b.wins - a.wins)
             .slice(0, 5)
@@ -115,9 +115,9 @@ export default function HomePage() {
   // Discard a game (mark as cancelled, don't save scores)
   const handleDiscardGame = async (gameId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase
         .from('games')
-        .update({
+        .update as any)({
           status: 'cancelled',
           ended_at: new Date().toISOString()
         })
@@ -176,8 +176,8 @@ export default function HomePage() {
       // Calculate totals
       const playerTotals = game.game_players.map((gp) => {
         const total = (scoresData || [])
-          .filter((s) => s.player_id === gp.player_id)
-          .reduce((sum, s) => sum + s.score, 0)
+          .filter((s: any) => s.player_id === gp.player_id)
+          .reduce((sum: number, s: any) => sum + s.score, 0)
         return { playerId: gp.player_id, total }
       })
 
@@ -186,9 +186,9 @@ export default function HomePage() {
       const winnerId = sorted[0]?.playerId || null
 
       // Update game as completed
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase
         .from('games')
-        .update({
+        .update as any)({
           status: 'completed',
           winner_id: winnerId,
           ended_at: new Date().toISOString(),
@@ -199,9 +199,9 @@ export default function HomePage() {
 
       // Update final scores for all players
       for (const pt of playerTotals) {
-        await supabase
+        await (supabase
           .from('game_players')
-          .update({ final_score: pt.total })
+          .update as any)({ final_score: pt.total })
           .eq('game_id', gameId)
           .eq('player_id', pt.playerId)
       }

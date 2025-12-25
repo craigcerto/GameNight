@@ -67,11 +67,14 @@ export default function GamePage() {
         .single()
 
       if (gameError) throw gameError
-      setGame(gameData as unknown as GameData)
+
+      // Cast once and reuse
+      const typedGameData = gameData as unknown as GameData
+      setGame(typedGameData)
 
       // Initialize edit values
-      setEditMaxRounds(gameData.max_rounds || 12)
-      setEditMaxPoints(gameData.max_points || 200)
+      setEditMaxRounds(typedGameData.max_rounds || 12)
+      setEditMaxPoints(typedGameData.max_points || 200)
 
       // Load existing scores
       const { data: scoresData, error: scoresError } = await supabase
@@ -88,7 +91,7 @@ export default function GamePage() {
       if (typedScores && typedScores.length > 0) {
         const maxRound = Math.max(...typedScores.map((s) => s.round))
         const roundComplete = typedScores.filter((s) => s.round === maxRound).length ===
-          gameData.game_players.length
+          typedGameData.game_players.length
         setCurrentRound(roundComplete ? maxRound + 1 : maxRound)
       }
     } catch (error) {
@@ -141,9 +144,9 @@ export default function GamePage() {
         updates.max_points = editMaxPoints
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase
         .from('games')
-        .update(updates)
+        .update as any)(updates)
         .eq('id', gameId)
 
       if (error) throw error
@@ -185,9 +188,9 @@ export default function GamePage() {
       const gameWinner = sorted[0]?.player || null
 
       // Update game as completed
-      await supabase
+      await (supabase
         .from('games')
-        .update({
+        .update as any)({
           status: 'completed',
           winner_id: gameWinner?.id || null,
           ended_at: new Date().toISOString(),
@@ -196,9 +199,9 @@ export default function GamePage() {
 
       // Update final scores for all players
       for (const pt of playerTotals) {
-        await supabase
+        await (supabase
           .from('game_players')
-          .update({ final_score: pt.total })
+          .update as any)({ final_score: pt.total })
           .eq('game_id', gameId)
           .eq('player_id', pt.player.id)
       }
@@ -237,9 +240,9 @@ export default function GamePage() {
         score: s.score,
       }))
 
-      const { error: insertError } = await supabase
+      const { error: insertError } = await (supabase
         .from('scores')
-        .insert(scoreInserts)
+        .insert as any)(scoreInserts)
 
       if (insertError) throw insertError
 
@@ -322,9 +325,9 @@ export default function GamePage() {
         })
 
         // Update game as completed
-        await supabase
+        await (supabase
           .from('games')
-          .update({
+          .update as any)({
             status: 'completed',
             winner_id: gameWinner.id,
             ended_at: new Date().toISOString(),
@@ -333,9 +336,9 @@ export default function GamePage() {
 
         // Update final scores for all players
         for (const pt of playerTotals) {
-          await supabase
+          await (supabase
             .from('game_players')
-            .update({ final_score: pt.total })
+            .update as any)({ final_score: pt.total })
             .eq('game_id', gameId)
             .eq('player_id', pt.player.id)
         }

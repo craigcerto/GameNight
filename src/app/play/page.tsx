@@ -99,9 +99,9 @@ export default function PlayPage() {
 
     try {
       // Create the game
-      const { data: game, error: gameError } = await supabase
+      const { data: game, error: gameError } = await (supabase
         .from('games')
-        .insert({
+        .insert as any)({
           game_type: gameType,
           completion_type: completionType,
           max_rounds: completionType === 'rounds' ? maxRounds : null,
@@ -113,16 +113,19 @@ export default function PlayPage() {
 
       if (gameError) throw gameError
 
+      // Type assertion for game data
+      const typedGame = game as any
+
       // Add players to the game
       const gamePlayers = selectedPlayerIds.map((playerId) => ({
-        game_id: game.id,
+        game_id: typedGame.id,
         player_id: playerId,
         final_score: 0,
       }))
 
-      const { error: playersError } = await supabase
+      const { error: playersError } = await (supabase
         .from('game_players')
-        .insert(gamePlayers)
+        .insert as any)(gamePlayers)
 
       if (playersError) throw playersError
 
@@ -132,7 +135,7 @@ export default function PlayPage() {
       })
 
       // Navigate to the game page
-      router.push(`/game/${game.id}`)
+      router.push(`/game/${typedGame.id}`)
     } catch (error) {
       console.error('Error creating game:', error)
       toast({
