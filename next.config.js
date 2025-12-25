@@ -10,21 +10,11 @@ const nextConfig = {
       },
     ],
   },
+  // Exclude only problematic patterns, not everything
   experimental: {
-    // Exclude problematic patterns from build trace to avoid stack overflow
     outputFileTracingExcludes: {
-      '*': ['**/*'],
+      '/api/frank/dialogue': ['node_modules/**/*'],
     },
-  },
-  // Increase Node.js stack size during build
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.optimization = {
-        ...config.optimization,
-        moduleIds: 'named',
-      }
-    }
-    return config
   },
 }
 
