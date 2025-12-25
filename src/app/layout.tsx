@@ -3,6 +3,8 @@ import { Inter, Orbitron } from 'next/font/google'
 import './globals.css'
 import { Navigation } from '@/components/Navigation'
 import { Toaster } from '@/components/ui/toaster'
+import { FrankProvider } from '@/contexts/FrankContext'
+import { FrankMascot } from '@/components/FrankMascot'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,11 +29,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${orbitron.variable} font-sans min-h-screen bg-background`}>
-        <Navigation />
-        <main className="container mx-auto px-4 py-6">
-          {children}
-        </main>
-        <Toaster />
+        <FrankProvider>
+          <Navigation />
+          <FrankMascot />
+          <main className="container mx-auto px-4 py-6">
+            {children}
+          </main>
+          <Toaster />
+        </FrankProvider>
       </body>
     </html>
   )

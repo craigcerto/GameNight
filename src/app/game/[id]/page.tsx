@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Trophy, Home, RotateCcw, StopCircle } from 'lucide-react'
+import Image from 'next/image'
+import { Trophy, Home, RotateCcw, StopCircle, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -14,10 +15,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Scoreboard } from '@/components/Scoreboard'
 import { ScoreEntry } from '@/components/ScoreEntry'
+import { LoadingScreen } from '@/components/LoadingScreen'
 import { supabase } from '@/lib/supabase'
 import { useToast } from '@/components/ui/use-toast'
+import { useFrank } from '@/contexts/FrankContext'
+import { detectScoreEvent, detectCloseGame } from '@/lib/frankStateMachine'
 import { GAME_TYPE_LABELS } from '@/lib/types'
 import type { Game, Player, Score, GamePlayer } from '@/lib/types'
 
@@ -29,6 +35,7 @@ export default function GamePage() {
   const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
+  const { triggerEvent } = useFrank()
   const gameId = params.id as string
 
   const [game, setGame] = useState<GameData | null>(null)
@@ -37,7 +44,10 @@ export default function GamePage() {
   const [loading, setLoading] = useState(true)
   const [showWinnerModal, setShowWinnerModal] = useState(false)
   const [showEndGameModal, setShowEndGameModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [winner, setWinner] = useState<Player | null>(null)
+  const [editMaxRounds, setEditMaxRounds] = useState<number>(12)
+  const [editMaxPoints, setEditMaxPoints] = useState<number>(200)
 
   const players = game?.game_players.map((gp) => gp.player) || []
 
@@ -58,6 +68,10 @@ export default function GamePage() {
 
       if (gameError) throw gameError
       setGame(gameData as unknown as GameData)
+
+      // Initialize edit values
+      setEditMaxRounds(gameData.max_rounds || 12)
+      setEditMaxPoints(gameData.max_points || 200)
 
       // Load existing scores
       const { data: scoresData, error: scoresError } = await supabase
@@ -113,6 +127,45 @@ export default function GamePage() {
       supabase.removeChannel(channel)
     }
   }, [gameId, loadGame])
+
+  // Update game settings function
+  const handleUpdateSettings = async () => {
+    if (!game) return
+
+    try {
+      const updates: { max_rounds?: number; max_points?: number } = {}
+
+      if (game.completion_type === 'rounds') {
+        updates.max_rounds = editMaxRounds
+      } else {
+        updates.max_points = editMaxPoints
+      }
+
+      const { error } = await supabase
+        .from('games')
+        .update(updates)
+        .eq('id', gameId)
+
+      if (error) throw error
+
+      toast({
+        title: 'Settings Updated',
+        description: game.completion_type === 'rounds'
+          ? `Max rounds changed to ${editMaxRounds}`
+          : `Score limit changed to ${editMaxPoints}`,
+      })
+
+      setShowSettingsModal(false)
+      loadGame()
+    } catch (error) {
+      console.error('Error updating settings:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update game settings',
+        variant: 'destructive',
+      })
+    }
+  }
 
   // End game early function
   const handleEndGameEarly = async () => {
@@ -190,6 +243,9 @@ export default function GamePage() {
 
       if (insertError) throw insertError
 
+      // Trigger round end drumroll
+      triggerEvent('round_end')
+
       // Calculate new totals
       const allScores = [...scores, ...scoreInserts.map((s, i) => ({
         ...s,
@@ -203,6 +259,41 @@ export default function GamePage() {
           .reduce((sum, s) => sum + s.score, 0)
         return { player, total }
       })
+
+      // Detect score-based events for this round
+      roundScores.forEach((rs) => {
+        const player = players.find((p) => p.id === rs.playerId)
+        if (!player) return
+
+        const playerScoresHistory = allScores
+          .filter((s) => s.player_id === rs.playerId)
+          .map((s) => s.score)
+        const lastThreeScores = playerScoresHistory.slice(-3)
+
+        const scoreEvent = detectScoreEvent(rs.score, {
+          playerName: player.name,
+          score: rs.score,
+          lastThreeScores,
+        })
+
+        if (scoreEvent) {
+          triggerEvent(scoreEvent, {
+            playerName: player.name,
+            score: rs.score,
+          })
+        }
+      })
+
+      // Check for close game
+      const sorted = [...playerTotals].sort((a, b) => b.total - a.total)
+      if (sorted.length >= 2) {
+        const closeGameEvent = detectCloseGame(sorted[0].total, sorted[1].total)
+        if (closeGameEvent) {
+          triggerEvent(closeGameEvent, {
+            scoreDiff: sorted[0].total - sorted[1].total,
+          })
+        }
+      }
 
       // Check win conditions
       let gameWinner: Player | null = null
@@ -223,6 +314,13 @@ export default function GamePage() {
       }
 
       if (gameEnded && gameWinner) {
+        // Trigger game win event
+        triggerEvent('game_win', {
+          playerName: gameWinner.name,
+          isWinner: true,
+          totalScore: playerTotals.find((pt) => pt.player.id === gameWinner.id)?.total,
+        })
+
         // Update game as completed
         await supabase
           .from('games')
@@ -265,11 +363,7 @@ export default function GamePage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground">Loading game...</p>
-      </div>
-    )
+    return <LoadingScreen message="Dealing the cards..." action="shuffling" />
   }
 
   if (!game) {
@@ -293,12 +387,15 @@ export default function GamePage() {
       {/* Game header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-            <span className="text-3xl">
-              {game.game_type === 'dominoes' && '🁣'}
-              {game.game_type === 'rummy' && '🃏'}
-              {game.game_type === 'mahjong' && '🀄'}
-            </span>
+          <h1 className="font-display text-2xl font-bold flex items-center gap-3">
+            <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0">
+              <Image
+                src={`/images/games/${game.game_type === 'dominoes' ? 'dominos' : game.game_type}.jpg`}
+                alt={GAME_TYPE_LABELS[game.game_type]}
+                fill
+                className="object-cover"
+              />
+            </div>
             {GAME_TYPE_LABELS[game.game_type]}
           </h1>
           <p className="text-muted-foreground">
@@ -310,15 +407,26 @@ export default function GamePage() {
 
         <div className="flex gap-2">
           {!isCompleted && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowEndGameModal(true)}
-              className="text-red-400 border-red-400/50 hover:bg-red-400/10"
-            >
-              <StopCircle className="h-4 w-4 mr-2" />
-              End Game
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowSettingsModal(true)}
+                className="text-[#00e5ff] border-[#00e5ff]/50 hover:bg-[#00e5ff]/10"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEndGameModal(true)}
+                className="text-red-400 border-red-400/50 hover:bg-red-400/10"
+              >
+                <StopCircle className="h-4 w-4 mr-2" />
+                End Game
+              </Button>
+            </>
           )}
           <Link href="/">
             <Button variant="outline" size="sm">
@@ -446,6 +554,70 @@ export default function GamePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Game Settings Modal */}
+      <Dialog open={showSettingsModal} onOpenChange={setShowSettingsModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Game Settings</DialogTitle>
+            <DialogDescription>
+              Modify the game completion conditions mid-game.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {game?.completion_type === 'rounds' ? (
+              <div className="space-y-2">
+                <Label htmlFor="maxRounds">Maximum Rounds</Label>
+                <Input
+                  id="maxRounds"
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={editMaxRounds}
+                  onChange={(e) => setEditMaxRounds(Number(e.target.value))}
+                  className="w-full"
+                />
+                <p className="text-xs text-white/50">
+                  Current: Round {Math.min(currentRound, game.max_rounds || 12)} of {game.max_rounds}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="maxPoints">Score Limit</Label>
+                <Input
+                  id="maxPoints"
+                  type="number"
+                  min="10"
+                  max="10000"
+                  step="10"
+                  value={editMaxPoints}
+                  onChange={(e) => setEditMaxPoints(Number(e.target.value))}
+                  className="w-full"
+                />
+                <p className="text-xs text-white/50">
+                  Current target: {game?.max_points} points
+                </p>
+              </div>
+            )}
+          </div>
+          <DialogFooter className="flex gap-3 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setShowSettingsModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              onClick={handleUpdateSettings}
+              className="bg-[#00e5ff] hover:bg-[#00e5ff]/90 text-black"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Save Settings
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* End Game Confirmation Modal */}
       <Dialog open={showEndGameModal} onOpenChange={setShowEndGameModal}>

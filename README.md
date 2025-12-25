@@ -180,3 +180,36 @@ Perfect for personal use!
 ## License
 
 MIT
+
+
+  Frank the Dealer - Sprite Sheet Prompt
+
+  10-frame horizontal sprite sheet of a dog casino dealer named Frank performing a card dealing animation loop. Retro pixel art style, 1990s arcade game aesthetic.
+
+  Subject: Frank is a mini golden doodle (sample picture attached) wearing a classic green casino dealer visor and black bow tie. Anthropomorphic pose standing upright
+  behind a casino table.
+
+  Layout: Horizontal sprite sheet, 10 equally-spaced frames from left to right, each frame 256x256 pixels. Clean separation between frames with solid
+  black background (#000000).
+
+  Animation Sequence:
+  Frame 1: Ready pose - Frank standing still, cards in deck in left paw
+  Frame 2-3: Right paw reaching toward deck
+  Frame 4-5: Paw pulling card from deck with slight motion blur
+  Frame 6-7: Card dealing motion, arm extending forward
+  Frame 8-9: Arm retracting, card released
+  Frame 10: Return to Frame 1 ready pose for seamless loop
+
+  Composition: 3/4 view angle, slightly looking down at the table. Consistent character proportions across all frames. Camera locked, only Frank moves.
+
+  Lighting: Neon casino lighting with cyan and magenta rim lights from overhead. Key light at 45° top-left. Warm golden glow from casino table felt. High
+  contrast shadows.
+
+  Style: Bold pixel art with clean black outlines, limited color palette (16 colors max): neon cyan (#00FFFF), hot pink (#FF10F0), electric purple
+  (#8B00FF), golden yellow (#FFD700), forest green (dealer visor #228B22), deep black (#0A0A0A), warm highlights. 1990s arcade fighter aesthetic, similar
+  to Street Fighter II character animations. Smooth gradients on neon edges only.
+
+  Technical: Each frame perfectly centered and aligned. Consistent sprite dimensions. Image rendering optimized for pixelated display. No anti-aliasing
+  blur between frames. Export as PNG with transparency.
+
+  Atmosphere: Smoky underground casino vibe, subtle card suit symbols (♠♥♦♣) in dark background, professional dealer energy.

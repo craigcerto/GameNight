@@ -3,19 +3,33 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Play, Trophy, TrendingUp, Clock, ChevronRight } from 'lucide-react'
+import { Play, Trophy, TrendingUp, Clock, ChevronRight, Trash2, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { GameHistory } from '@/components/GameHistory'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { useToast } from '@/components/ui/use-toast'
 import type { GameWithPlayers, Player } from '@/lib/types'
 
 export default function HomePage() {
+  const { toast } = useToast()
   const [games, setGames] = useState<GameWithPlayers[]>([])
   const [activeGames, setActiveGames] = useState<GameWithPlayers[]>([])
   const [topPlayers, setTopPlayers] = useState<{ player: Player; wins: number }[]>([])
   const [loading, setLoading] = useState(true)
   const [configured, setConfigured] = useState(true)
+  const [gameToDiscard, setGameToDiscard] = useState<string | null>(null)
+  const [gameToEnd, setGameToEnd] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -98,6 +112,150 @@ export default function HomePage() {
     loadData()
   }, [])
 
+  // Discard a game (mark as cancelled, don't save scores)
+  const handleDiscardGame = async (gameId: string) => {
+    try {
+      const { error } = await supabase
+        .from('games')
+        .update({
+          status: 'cancelled',
+          ended_at: new Date().toISOString()
+        })
+        .eq('id', gameId)
+
+      if (error) throw error
+
+      toast({
+        title: 'Game Discarded',
+        description: 'The game has been cancelled',
+      })
+
+      // Refresh active games
+      const { data: activeGamesData } = await supabase
+        .from('games')
+        .select(`
+          *,
+          game_players (
+            *,
+            player:players (*)
+          )
+        `)
+        .eq('status', 'active')
+        .order('started_at', { ascending: false })
+
+      if (activeGamesData) {
+        setActiveGames(activeGamesData as unknown as GameWithPlayers[])
+      }
+    } catch (error) {
+      console.error('Error discarding game:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to discard game',
+        variant: 'destructive',
+      })
+    } finally {
+      setGameToDiscard(null)
+    }
+  }
+
+  // End a game early (save current state and determine winner)
+  const handleEndGame = async (gameId: string) => {
+    try {
+      // Get scores for this game
+      const { data: scoresData, error: scoresError } = await supabase
+        .from('scores')
+        .select('*')
+        .eq('game_id', gameId)
+
+      if (scoresError) throw scoresError
+
+      // Get game players
+      const game = activeGames.find(g => g.id === gameId)
+      if (!game) return
+
+      // Calculate totals
+      const playerTotals = game.game_players.map((gp) => {
+        const total = (scoresData || [])
+          .filter((s) => s.player_id === gp.player_id)
+          .reduce((sum, s) => sum + s.score, 0)
+        return { playerId: gp.player_id, total }
+      })
+
+      // Find winner (highest score)
+      const sorted = [...playerTotals].sort((a, b) => b.total - a.total)
+      const winnerId = sorted[0]?.playerId || null
+
+      // Update game as completed
+      const { error: updateError } = await supabase
+        .from('games')
+        .update({
+          status: 'completed',
+          winner_id: winnerId,
+          ended_at: new Date().toISOString(),
+        })
+        .eq('id', gameId)
+
+      if (updateError) throw updateError
+
+      // Update final scores for all players
+      for (const pt of playerTotals) {
+        await supabase
+          .from('game_players')
+          .update({ final_score: pt.total })
+          .eq('game_id', gameId)
+          .eq('player_id', pt.playerId)
+      }
+
+      toast({
+        title: 'Game Ended',
+        description: 'The game has been saved with current scores',
+      })
+
+      // Refresh both active games and completed games
+      const { data: activeGamesData } = await supabase
+        .from('games')
+        .select(`
+          *,
+          game_players (
+            *,
+            player:players (*)
+          )
+        `)
+        .eq('status', 'active')
+        .order('started_at', { ascending: false })
+
+      const { data: gamesData } = await supabase
+        .from('games')
+        .select(`
+          *,
+          game_players (
+            *,
+            player:players (*)
+          ),
+          winner:players!games_winner_id_fkey (*)
+        `)
+        .eq('status', 'completed')
+        .order('started_at', { ascending: false })
+        .limit(10)
+
+      if (activeGamesData) {
+        setActiveGames(activeGamesData as unknown as GameWithPlayers[])
+      }
+      if (gamesData) {
+        setGames(gamesData as unknown as GameWithPlayers[])
+      }
+    } catch (error) {
+      console.error('Error ending game:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to end game',
+        variant: 'destructive',
+      })
+    } finally {
+      setGameToEnd(null)
+    }
+  }
+
   if (!configured) {
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
@@ -136,21 +294,14 @@ export default function HomePage() {
   return (
     <div className="space-y-8">
       {/* Hero section - no blur effects for performance */}
-      <section className="py-12 text-center">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <Image
-            src="/images/neon.png"
-            alt="GameNight"
-            width={340}
-            height={170}
-            className="max-w-full h-auto"
-            priority
-          />
-        </div>
+      <section className="text-center">
+        {/* Title */}
+        <h1 className="font-display text-6xl font-bold gradient-text mb-4">
+          GameNight
+        </h1>
 
         {/* Tagline */}
-        <p className="text-lg text-white/60 mb-8 max-w-md mx-auto">
+        <p className="text-base text-white/60 mb-8">
           Track scores for Dominoes, Rummy, Mahjong and more
         </p>
 
@@ -176,27 +327,56 @@ export default function HomePage() {
             <CardContent className="p-4">
               <div className="space-y-3">
                 {activeGames.map((game) => (
-                  <Link key={game.id} href={`/game/${game.id}`}>
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#00e5ff]/40 hover:bg-[#00e5ff]/10 transition-colors cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 rounded-lg bg-white/10 flex items-center justify-center text-2xl">
-                          {game.game_type === 'dominoes' && '🁣'}
-                          {game.game_type === 'rummy' && '🃏'}
-                          {game.game_type === 'mahjong' && '🀄'}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-white capitalize">{game.game_type}</p>
-                          <p className="text-sm text-white/50">
-                            {game.game_players.length} players
-                          </p>
-                        </div>
+                  <div key={game.id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                    <Link href={`/game/${game.id}`} className="flex items-center gap-4 flex-1 hover:opacity-80 transition-opacity">
+                      <div className="relative w-11 h-11 rounded-lg overflow-hidden flex-shrink-0">
+                        <Image
+                          src={`/images/games/${game.game_type === 'dominoes' ? 'dominos' : game.game_type}.jpg`}
+                          alt={game.game_type}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                      <Button variant="neon-cyan" size="sm">
-                        Resume
-                        <ChevronRight className="h-4 w-4 ml-1" />
+                      <div>
+                        <p className="font-semibold text-white capitalize">{game.game_type}</p>
+                        <p className="text-sm text-white/50">
+                          {game.game_players.length} players
+                        </p>
+                      </div>
+                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setGameToEnd(game.id)
+                        }}
+                        className="border-[#00e5ff]/40 hover:bg-[#00e5ff]/10"
+                      >
+                        <Save className="h-4 w-4 mr-1" />
+                        End
                       </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setGameToDiscard(game.id)
+                        }}
+                        className="border-[#ff2d75]/40 hover:bg-[#ff2d75]/10"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Discard
+                      </Button>
+                      <Link href={`/game/${game.id}`}>
+                        <Button variant="neon-cyan" size="sm">
+                          Resume
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </CardContent>
@@ -239,12 +419,25 @@ export default function HomePage() {
                     </div>
 
                     {/* Player Avatar */}
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                      style={{ backgroundColor: entry.player.color }}
-                    >
-                      {entry.player.name.charAt(0)}
-                    </div>
+                    {entry.player.avatar_url ? (
+                      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <Image
+                          src={entry.player.avatar_url}
+                          alt={entry.player.name}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-cover"
+                          style={{ imageRendering: 'pixelated' }}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                        style={{ backgroundColor: entry.player.color }}
+                      >
+                        {entry.player.name.charAt(0)}
+                      </div>
+                    )}
 
                     {/* Name */}
                     <span className="font-medium flex-1 text-white/90">
@@ -296,6 +489,48 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </section>
+
+      {/* Discard Game Confirmation Dialog */}
+      <AlertDialog open={gameToDiscard !== null} onOpenChange={(open: boolean) => !open && setGameToDiscard(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard Game?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will cancel the game without saving any scores. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => gameToDiscard && handleDiscardGame(gameToDiscard)}
+              className="bg-[#ff2d75] hover:bg-[#ff2d75]/90"
+            >
+              Discard Game
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* End Game Confirmation Dialog */}
+      <AlertDialog open={gameToEnd !== null} onOpenChange={(open: boolean) => !open && setGameToEnd(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>End Game Early?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will save the game with current scores and determine a winner based on the highest total score.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => gameToEnd && handleEndGame(gameToEnd)}
+              className="bg-[#00e5ff] hover:bg-[#00e5ff]/90 text-black"
+            >
+              End & Save Game
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

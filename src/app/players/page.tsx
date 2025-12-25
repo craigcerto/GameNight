@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { PlayerCard } from '@/components/PlayerCard'
+import { LoadingScreen } from '@/components/LoadingScreen'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useToast } from '@/components/ui/use-toast'
 import type { Player } from '@/lib/types'
@@ -162,11 +163,7 @@ export default function PlayersPage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground">Loading players...</p>
-      </div>
-    )
+    return <LoadingScreen message="Meeting the players..." action="waving" />
   }
 
   return (

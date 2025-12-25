@@ -11,10 +11,10 @@ interface GameTypeSelectorProps {
   className?: string
 }
 
-const gameTypes: { type: GameType; icon: string; emoji: string }[] = [
-  { type: 'dominoes', icon: '/images/games/dominoes.png', emoji: '🁣' },
-  { type: 'rummy', icon: '/images/games/rummy.png', emoji: '🃏' },
-  { type: 'mahjong', icon: '/images/games/mahjong.png', emoji: '🀄' },
+const gameTypes: { type: GameType; icon: string }[] = [
+  { type: 'dominoes', icon: '/images/games/dominos.jpg' },
+  { type: 'rummy', icon: '/images/games/rummy.jpg' },
+  { type: 'mahjong', icon: '/images/games/mahjong.jpg' },
 ]
 
 export function GameTypeSelector({
@@ -24,7 +24,7 @@ export function GameTypeSelector({
 }: GameTypeSelectorProps) {
   return (
     <div className={cn("grid grid-cols-3 gap-4", className)}>
-      {gameTypes.map(({ type, icon, emoji }) => (
+      {gameTypes.map(({ type, icon }) => (
         <button
           key={type}
           type="button"
@@ -43,10 +43,15 @@ export function GameTypeSelector({
 
           {/* Icon container */}
           <div className={cn(
-            "relative w-16 h-16 mb-4 flex items-center justify-center text-5xl transition-transform duration-300",
-            selected === type && "scale-110"
+            "relative w-20 h-20 mb-4 rounded-lg overflow-hidden transition-transform duration-300",
+            selected === type && "scale-110 shadow-lg"
           )}>
-            {emoji}
+            <Image
+              src={icon}
+              alt={GAME_TYPE_LABELS[type]}
+              fill
+              className="object-cover"
+            />
           </div>
 
           {/* Label */}

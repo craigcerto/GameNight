@@ -22,6 +22,7 @@ const config: Config = {
         'gn-gold': '#ff2d75', // Now maps to neon pink
         'gn-licorice': '#0a0a0f',
         'gn-white': '#F4F4F9',
+        'gn-cream': '#F4F4F9',
         'gn-purple': '#9d4edd',
 
         // Semantic colors
@@ -101,6 +102,10 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
+        "fadeIn": {
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -110,6 +115,7 @@ const config: Config = {
         "pulse-neon": "pulse-neon 2s ease-in-out infinite",
         "pulse-gold": "pulse-neon 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
+        "fadeIn": "fadeIn 0.3s ease-out",
       },
       boxShadow: {
         'neon-pink': '0 0 10px #ff2d75, 0 0 20px #ff2d75',

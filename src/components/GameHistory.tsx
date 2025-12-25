@@ -1,6 +1,7 @@
 "use client"
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Trophy, Calendar, Users, Target } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatDate } from '@/lib/utils'
@@ -50,11 +51,14 @@ function GameHistoryCard({ game }: { game: GameWithPlayers }) {
             {/* Game info */}
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">
-                  {game.game_type === 'dominoes' && '🁣'}
-                  {game.game_type === 'rummy' && '🃏'}
-                  {game.game_type === 'mahjong' && '🀄'}
-                </span>
+                <div className="relative w-8 h-8 rounded overflow-hidden flex-shrink-0">
+                  <Image
+                    src={`/images/games/${game.game_type === 'dominoes' ? 'dominos' : game.game_type}.jpg`}
+                    alt={GAME_TYPE_LABELS[game.game_type]}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <h3 className="font-semibold text-lg">
                   {GAME_TYPE_LABELS[game.game_type]}
                 </h3>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react'
+import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -102,13 +103,29 @@ export function ScoreEntry({
             >
               {/* Player indicator */}
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shrink-0 transition-all duration-300"
+                className="w-10 h-10 rounded-full overflow-hidden border-2 flex items-center justify-center shrink-0 transition-all duration-300 relative"
                 style={{
-                  backgroundColor: player.color,
+                  borderColor: player.color,
                   boxShadow: `0 0 15px ${player.color}40`,
                 }}
               >
-                {player.name.charAt(0)}
+                {player.avatar_url ? (
+                  <Image
+                    src={player.avatar_url}
+                    alt={player.name}
+                    fill
+                    className="object-cover"
+                    style={{ imageRendering: 'pixelated' }}
+                    unoptimized
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center text-white font-bold"
+                    style={{ backgroundColor: player.color }}
+                  >
+                    {player.name.charAt(0)}
+                  </div>
+                )}
               </div>
 
               {/* Player name */}

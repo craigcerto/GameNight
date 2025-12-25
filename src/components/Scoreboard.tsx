@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from 'react'
+import Image from 'next/image'
 import { Trophy, Medal } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlayerBadge } from './PlayerCard'
@@ -89,13 +90,29 @@ export function Scoreboard({
 
             {/* Player avatar */}
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-all duration-300"
+              className="w-10 h-10 rounded-full overflow-hidden border-2 flex items-center justify-center transition-all duration-300 relative"
               style={{
-                backgroundColor: standing.player.color,
+                borderColor: standing.player.color,
                 boxShadow: index === 0 ? `0 0 20px ${standing.player.color}60` : undefined,
               }}
             >
-              {standing.player.name.charAt(0)}
+              {standing.player.avatar_url ? (
+                <Image
+                  src={standing.player.avatar_url}
+                  alt={standing.player.name}
+                  fill
+                  className="object-cover"
+                  style={{ imageRendering: 'pixelated' }}
+                  unoptimized
+                />
+              ) : (
+                <div
+                  className="w-full h-full flex items-center justify-center text-white font-bold"
+                  style={{ backgroundColor: standing.player.color }}
+                >
+                  {standing.player.name.charAt(0)}
+                </div>
+              )}
             </div>
 
             {/* Player name */}

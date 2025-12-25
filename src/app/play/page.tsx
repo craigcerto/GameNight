@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { GameTypeSelector } from '@/components/GameTypeSelector'
 import { PlayerSelector } from '@/components/PlayerSelector'
 import { GameSettings } from '@/components/GameSettings'
+import { LoadingScreen } from '@/components/LoadingScreen'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useToast } from '@/components/ui/use-toast'
 import type { GameType, CompletionType, Player } from '@/lib/types'
@@ -145,11 +146,7 @@ export default function PlayPage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    )
+    return <LoadingScreen message="Loading players..." />
   }
 
   return (
