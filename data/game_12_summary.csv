@@ -1,0 +1,5 @@
+game_id,game_dttm,game_type,rounds,game_completion_type,game_end_dttm,player_name,player_score
+12,2025-02-15T05:38:55Z,Rummy,4,Rounds,2025-02-15T05:49:02Z,Frank,150
+12,2025-02-15T05:38:55Z,Rummy,4,Rounds,2025-02-15T05:49:02Z,Lauren,130
+12,2025-02-15T05:38:55Z,Rummy,4,Rounds,2025-02-15T05:49:02Z,Paul,125
+12,2025-02-15T05:38:55Z,Rummy,4,Rounds,2025-02-15T05:49:02Z,Craig,55

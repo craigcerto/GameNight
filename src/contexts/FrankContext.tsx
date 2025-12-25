@@ -37,6 +37,24 @@ export function FrankProvider({ children }: { children: ReactNode }) {
     }
   }, [pathname])
 
+  // Idle animation cycling - only on game pages
+  useEffect(() => {
+    // Only cycle idle animations on game pages
+    if (!pathname.startsWith('/game/')) return
+
+    const idleCycleInterval = setInterval(() => {
+      // Only cycle if currently showing a low-priority (idle) state
+      setState((current) => {
+        if (current.priority === 0) {
+          return getFrankStateForEvent('idle_cycle', {})
+        }
+        return current
+      })
+    }, 12000) // Every 12 seconds
+
+    return () => clearInterval(idleCycleInterval)
+  }, [pathname])
+
   const triggerEvent = useCallback(
     (event: FrankEvent, context: GameContext = {}) => {
       const newState = getFrankStateForEvent(event, context)

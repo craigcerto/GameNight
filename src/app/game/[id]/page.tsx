@@ -285,6 +285,11 @@ export default function GamePage() {
             score: rs.score,
           })
         }
+
+        // 15% chance to randomly shrug after any score (adds variety)
+        if (Math.random() < 0.15) {
+          triggerEvent('random_shrug')
+        }
       })
 
       // Check for close game

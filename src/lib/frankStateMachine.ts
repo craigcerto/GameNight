@@ -37,6 +37,10 @@ export type FrankEvent =
   | 'loading'
   | 'confirmation'
   | 'error'
+  | 'medium_score_point'    // NEW - triggers pointing
+  | 'medium_score_nod'      // NEW - triggers nodding
+  | 'random_shrug'          // NEW - random shrugging
+  | 'idle_cycle'            // NEW - for idle animation rotation
 
 export interface FrankState {
   action: FrankAction
@@ -71,9 +75,13 @@ const eventPriority: Record<FrankEvent, number> = {
   tie_game: 1,
   confirmation: 1,
   game_start: 1,
+  medium_score_point: 1,  // NEW
+  medium_score_nod: 1,    // NEW
+  random_shrug: 1,        // NEW
   loading: 0,
   page_load: 0,
   error: 0,
+  idle_cycle: 0,          // NEW
 }
 
 /**
@@ -177,6 +185,45 @@ export function getFrankStateForEvent(
         priority,
       }
 
+    case 'medium_score_point':
+      return {
+        action: 'pointing',
+        mood: 'neutral',
+        dialogue: null,
+        showDialogue: true,
+        priority,
+      }
+
+    case 'medium_score_nod':
+      return {
+        action: 'nodding',
+        mood: 'neutral',
+        dialogue: null,
+        showDialogue: true,
+        priority,
+      }
+
+    case 'random_shrug':
+      return {
+        action: 'shrugging',
+        mood: 'neutral',
+        dialogue: null,
+        showDialogue: true,
+        priority,
+      }
+
+    case 'idle_cycle':
+      // Rotate between idle animations
+      const idleAnimations: FrankAction[] = ['idle-watching', 'smoking', 'thinking']
+      const randomIdle = idleAnimations[Math.floor(Math.random() * idleAnimations.length)]
+      return {
+        action: randomIdle,
+        mood: 'neutral',
+        dialogue: null,
+        showDialogue: false,  // No dialogue during idle cycling
+        priority,
+      }
+
     default:
       return {
         action: 'idle-watching',
@@ -195,9 +242,20 @@ export function detectScoreEvent(
   score: number,
   context: GameContext
 ): FrankEvent | null {
-  // High score threshold
-  if (score > 30) {
+  // High score threshold (lowered from 30 to 10)
+  if (score > 10) {
     return 'high_score'
+  }
+
+  // Medium score (new) - triggers pointing or nodding
+  if (score >= 5 && score <= 10) {
+    // Randomly use pointing or nodding for medium scores
+    return Math.random() > 0.5 ? 'medium_score_point' : 'medium_score_nod'
+  }
+
+  // Low but positive score (changed from 1-9 to 0-4)
+  if (score >= 0 && score < 5) {
+    return 'low_score'
   }
 
   // Negative score
@@ -205,14 +263,10 @@ export function detectScoreEvent(
     return 'negative_score'
   }
 
-  // Low but positive score
-  if (score > 0 && score < 10) {
-    return 'low_score'
-  }
-
-  // Check for hot streak
-  if (context.lastThreeScores && context.lastThreeScores.length === 3) {
-    if (context.lastThreeScores.every((s) => s > 20)) {
+  // Check for hot streak (lowered from 3 scores >20 to 2 scores >10)
+  if (context.lastThreeScores && context.lastThreeScores.length >= 2) {
+    const recentScores = context.lastThreeScores.slice(-2) // Get last 2 scores
+    if (recentScores.every((s) => s > 10)) {
       return 'hot_streak'
     }
   }
@@ -230,8 +284,8 @@ export function detectCloseGame(
   const diff = topScore - secondScore
   const percentDiff = topScore > 0 ? diff / topScore : 0
 
-  if (percentDiff < 0.1) {
-    // Less than 10% difference
+  if (percentDiff < 0.2) {
+    // Less than 20% difference (lowered from 10% for more frequent excited animations)
     return 'close_game'
   }
 

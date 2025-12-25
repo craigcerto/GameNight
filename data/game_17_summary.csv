@@ -1,0 +1,5 @@
+game_id,game_dttm,game_type,rounds,game_completion_type,game_end_dttm,player_name,player_score
+17,2025-11-27T23:54:27Z,Rummy,5,Score,2025-11-28T01:03:15Z,Craig,295
+17,2025-11-27T23:54:27Z,Rummy,5,Score,2025-11-28T01:03:15Z,Lauren,250
+17,2025-11-27T23:54:27Z,Rummy,5,Score,2025-11-28T01:03:15Z,Paul,250
+17,2025-11-27T23:54:27Z,Rummy,5,Score,2025-11-28T01:03:15Z,Gloria,70

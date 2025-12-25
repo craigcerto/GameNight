@@ -1,0 +1,5 @@
+game_id,game_dttm,game_type,rounds,game_completion_type,game_end_dttm,player_name,player_score
+10,2025-02-08T01:05:54Z,Rummy,11,Score,2025-02-08T03:16:52Z,Paul,515
+10,2025-02-08T01:05:54Z,Rummy,11,Score,2025-02-08T03:16:52Z,Lauren,440
+10,2025-02-08T01:05:54Z,Rummy,11,Score,2025-02-08T03:16:52Z,Gloria,335
+10,2025-02-08T01:05:54Z,Rummy,11,Score,2025-02-08T03:16:52Z,Craig,270

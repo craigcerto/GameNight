@@ -1,0 +1,5 @@
+game_id,game_dttm,game_type,rounds,game_completion_type,game_end_dttm,player_name,player_score
+4,2024-12-25T03:02:50Z,Rummy,9,Score,2024-12-25T04:29:39Z,Lauren,375
+4,2024-12-25T03:02:50Z,Rummy,9,Score,2024-12-25T04:29:39Z,Paul,365
+4,2024-12-25T03:02:50Z,Rummy,9,Score,2024-12-25T04:29:39Z,Gloria,295
+4,2024-12-25T03:02:50Z,Rummy,9,Score,2024-12-25T04:29:39Z,Craig,145

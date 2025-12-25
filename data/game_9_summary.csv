@@ -1,0 +1,5 @@
+game_id,game_dttm,game_type,rounds,game_completion_type,game_end_dttm,player_name,player_score
+9,2025-01-12T16:30:24Z,Rummy,7,Score,2025-01-12T16:33:54Z,Paul,305
+9,2025-01-12T16:30:24Z,Rummy,7,Score,2025-01-12T16:33:54Z,Gloria,290
+9,2025-01-12T16:30:24Z,Rummy,7,Score,2025-01-12T16:33:54Z,Amy,195
+9,2025-01-12T16:30:24Z,Rummy,7,Score,2025-01-12T16:33:54Z,Stacy,190
