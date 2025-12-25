@@ -10,11 +10,6 @@ const nextConfig = {
       },
     ],
   },
-
-  // Mark Sharp as external to prevent build tracing issues
-  experimental: {
-    serverComponentsExternalPackages: ['sharp'],
-  },
 }
 
 module.exports = nextConfig
